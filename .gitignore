@@ -1,7 +1,7 @@
 .DS_Store
 .vscode/
 CMakeFiles/
-CMake
+CMakeCache.txt
 cmake_install.cmake
 Makefile
 *.exe

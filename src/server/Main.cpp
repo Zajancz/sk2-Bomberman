@@ -2,6 +2,8 @@
 //      Starting point for this file is 05_sockets_concurrency/z2cpp
 
 #include <cstdlib>
+#include <cstdio>
+#include <cstring>
 #include <unistd.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -9,103 +11,65 @@
 #include <errno.h>
 #include <error.h>
 #include <netdb.h>
-#include <thread>
-#include <mutex>
+#include <sys/epoll.h>
 #include <unordered_set>
+#include <list>
 #include <signal.h>
+#include "Client.h"
+#include "Buffer.h"
+#include "EventHandler.h"
+#include "ServerEventHandler.h"
+#include "ServerAction.h"
 
-// server socket
+class Client;
+
 int servFd;
+std::unordered_set<Client*> clients;
 
-// client sockets
-std::mutex clientFdsLock;
-std::unordered_set<int> clientFds;
-
-// handles SIGINT
 void ctrl_c(int);
 
-// sends data to clientFds excluding fd
-void sendToAllBut(int fd, char * buffer, int count);
-
-// converts cstring to port
 uint16_t readPort(char * txt);
 
-// sets SO_REUSEADDR
-void setReuseAddr(int sock);
-
 int main(int argc, char ** argv){
-    // get and validate port number
     if(argc != 2) error(1, 0, "Need 1 arg (port)");
     auto port = readPort(argv[1]);
     
-    // create socket
-    servFd = socket(AF_INET, SOCK_STREAM, 0);
-    if(servFd == -1) error(1, errno, "socket failed");
-    
-    // graceful ctrl+c exit
-    signal(SIGINT, ctrl_c);
-    // prevent dead sockets from raising pipe signals on write
-    signal(SIGPIPE, SIG_IGN);
-    
-    setReuseAddr(servFd);
-    
-    // bind to any address and port provided in arguments
-    sockaddr_in serverAddr{.sin_family=AF_INET, .sin_port=htons((short)port), .sin_addr={INADDR_ANY}};
-    int res = bind(servFd, (sockaddr*) &serverAddr, sizeof(serverAddr));
-    if(res) error(1, errno, "bind failed");
-    
-    // enter listening mode
-    res = listen(servFd, 1);
-    if(res) error(1, errno, "listen failed");
-    
-/****************************/
-    
-    while(true){
-        // prepare placeholders for client address
-        sockaddr_in clientAddr{};
-        socklen_t clientAddrSize = sizeof(clientAddr);
-        
-        // accept new connection
-        auto clientFd = accept(servFd, (sockaddr*) &clientAddr, &clientAddrSize);
-        if(clientFd == -1) error(1, errno, "accept failed");
-        
-        // add client to all clients set
-        {
-            std::unique_lock<std::mutex> lock(clientFdsLock);
-            clientFds.insert(clientFd);
-        }
-        
-        // tell who has connected
-        printf("new connection from: %s:%hu (fd: %d)\n", inet_ntoa(clientAddr.sin_addr), ntohs(clientAddr.sin_port), clientFd);
-        
-/****************************/
+    servFd = ServerAction::start(port, &clients); // that's probably the wrong clients
+    // Create an epoll file descriptor
+    int epollFd = ServerAction::epollFd;
 
-        std::thread([clientFd]{
-            char buffer[255];
-            
-            while(true){
-                // read a message
-                int count = read(clientFd, buffer, 255);
-                
-                if(count < 1) {
-                    printf("removing %d\n", clientFd);
-                    {
-                        std::unique_lock<std::mutex> lock(clientFdsLock);
-                        clientFds.erase(clientFd);
-                    }
-                    shutdown(clientFd, SHUT_RDWR);
-                    close(clientFd);
-                    break;
-                } else {
-                    // broadcast the message
-                    sendToAllBut(clientFd, buffer, count);
-                }
-            }
-        }).detach();
-        
+    printf("server started - confirm\n");
+
+    // Set up the event structure
+    ServerEventHandler* serverEventHandler = new ServerEventHandler(&servFd, &Client::clients);
+    epoll_event epollEvent;
+    epollEvent.events = EPOLLIN;
+    epollEvent.data.ptr = serverEventHandler;
+    // {EPOLLIN, {.ptr=&serverEventHandler}};
+    epollEvent.data.u64 = 987654321;
+    // Add server socket (servFd) to the epoll set
+    epoll_ctl(epollFd, EPOLL_CTL_ADD, servFd, &epollEvent);
+
+    while(true) {
+        // Wait for an event on the epollFd
+        printf("\tepoll_wait: %d \n",(int)epoll_wait(epollFd, &epollEvent, 1, -1));
+        if ( epoll_wait(epollFd, &epollEvent, 1, -1) == -1 && errno!=EINTR) {
+            error(0,errno,"epoll_wait failed");
+            ctrl_c(SIGINT);
+        }
+        if (epollEvent.data.u64 == 987654321) {
+            printf("========= about to handle new request ===========\n");
+            // ! this throws "Segmentation fault (core dumped)" ! // I dont understand why.
+            // !((ServerEventHandler*)epollEvent.data.ptr)->handleEvent(epollEvent.events);
+            // the following seems to work,
+            serverEventHandler->handleEvent(epollEvent.events);
+            printf("finished handling new request\n");
+        } else {
+            printf("========= about to handle request of known client ===========\n");
+            ((EventHandler*)epollEvent.data.ptr)->handleEvent(epollEvent.events);
+        }
     }
-    
-/****************************/
+
 }
 
 uint16_t readPort(char * txt){
@@ -115,36 +79,11 @@ uint16_t readPort(char * txt){
     return port;
 }
 
-void setReuseAddr(int sock){
-    const int one = 1;
-    int res = setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &one, sizeof(one));
-    if(res) error(1,errno, "setsockopt failed");
-}
 
 void ctrl_c(int){
-    std::unique_lock<std::mutex> lock(clientFdsLock);
-    for(int clientFd : clientFds){
-        shutdown(clientFd, SHUT_RDWR);
-        close(clientFd);
-    }
+    for(Client * client : clients)
+        delete client;
     close(servFd);
     printf("Closing server\n");
     exit(0);
-}
-
-void sendToAllBut(int fd, char * buffer, int count){
-    int res;
-    std::unique_lock<std::mutex> lock(clientFdsLock);
-    decltype(clientFds) bad;
-    for(int clientFd : clientFds){
-        if(clientFd == fd) continue;
-        res = send(clientFd, buffer, count, MSG_DONTWAIT);
-        if(res!=count)
-            bad.insert(clientFd);
-    }
-    for(int clientFd : bad){
-        printf("removing %d\n", clientFd);
-        clientFds.erase(clientFd);
-        close(clientFd);
-    }
 }

@@ -1,4 +1,4 @@
 // This structure represents a message to server/client console
-struct Message {
+struct Text {
     char * content;
 };

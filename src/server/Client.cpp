@@ -32,15 +32,26 @@ void Client::handleEvent(uint32_t events) {
             events |= EPOLLERR;
         else {
             readBuffer.pos += count;
+            // Find '\n' symbol and return pointer to it's location (nullptr if not found)
             char * eol = (char*) memchr(readBuffer.data, '\n', readBuffer.pos);
-            if(eol == nullptr) {
+            if(eol == nullptr) { // readBuffer does not contain `\n` symbol
                 if(0 == readBuffer.remaining())
                     readBuffer.doube();
-            } else {
+            } else { // readbuffer contains at least one `\n`
                 do {
+                    // #### Read message
+                    // length of data in buffer to closest \n 
                     auto thismsglen = eol - readBuffer.data + 1;
+                    // save data to output buffer (dataToWrite)
+                    // only the length of this message
                     sendToAllBut(_fd, readBuffer.data, thismsglen);
+
+                    // TODO: MessageHandler //
+                    
+                    // #### Prepare for next message
+                    // calculate lenth of remaining data in buffer
                     auto nextmsgslen =  readBuffer.pos - thismsglen;
+                    // update buffer position
                     memmove(readBuffer.data, eol+1, nextmsgslen);
                     readBuffer.pos = nextmsgslen;
                 } while((eol = (char*) memchr(readBuffer.data, '\n', readBuffer.pos)));

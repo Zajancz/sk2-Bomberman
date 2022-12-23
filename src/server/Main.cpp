@@ -66,6 +66,7 @@ int main(int argc, char ** argv){
             printf("finished handling new request\n");
         } else {
             printf("========= about to handle request of known client ===========\n");
+            // Client->handleEvent()
             ((EventHandler*)epollEvent.data.ptr)->handleEvent(epollEvent.events);
         }
     }

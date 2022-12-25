@@ -5,3 +5,11 @@ struct Text {
     //char * content2 = "Content 2\n";
     //char * content3 = "Content 3\n";
 };
+
+struct PlayerPosition {};
+struct NewBombPlacement {};
+struct NewUser {};
+struct NewLobby {};
+struct LobbyList {};
+struct Join {};
+struct Ready {};

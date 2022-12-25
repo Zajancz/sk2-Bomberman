@@ -1,0 +1,27 @@
+[
+{
+  "directory": "/home/zajancz/Desktop/PROJEKT_SK2/sk2-Bomberman/build",
+  "command": "/usr/bin/g++   -I/home/zajancz/Desktop/PROJEKT_SK2/sk2-Bomberman/src/client  -g   -o CMakeFiles/client.dir/src/client/Main.cpp.o -c /home/zajancz/Desktop/PROJEKT_SK2/sk2-Bomberman/src/client/Main.cpp",
+  "file": "/home/zajancz/Desktop/PROJEKT_SK2/sk2-Bomberman/src/client/Main.cpp"
+},
+{
+  "directory": "/home/zajancz/Desktop/PROJEKT_SK2/sk2-Bomberman/build",
+  "command": "/usr/bin/g++   -I/home/zajancz/Desktop/PROJEKT_SK2/sk2-Bomberman/src/server  -g   -o CMakeFiles/server.dir/src/server/Client.cpp.o -c /home/zajancz/Desktop/PROJEKT_SK2/sk2-Bomberman/src/server/Client.cpp",
+  "file": "/home/zajancz/Desktop/PROJEKT_SK2/sk2-Bomberman/src/server/Client.cpp"
+},
+{
+  "directory": "/home/zajancz/Desktop/PROJEKT_SK2/sk2-Bomberman/build",
+  "command": "/usr/bin/g++   -I/home/zajancz/Desktop/PROJEKT_SK2/sk2-Bomberman/src/server  -g   -o CMakeFiles/server.dir/src/server/Main.cpp.o -c /home/zajancz/Desktop/PROJEKT_SK2/sk2-Bomberman/src/server/Main.cpp",
+  "file": "/home/zajancz/Desktop/PROJEKT_SK2/sk2-Bomberman/src/server/Main.cpp"
+},
+{
+  "directory": "/home/zajancz/Desktop/PROJEKT_SK2/sk2-Bomberman/build",
+  "command": "/usr/bin/g++   -I/home/zajancz/Desktop/PROJEKT_SK2/sk2-Bomberman/src/server  -g   -o CMakeFiles/server.dir/src/server/ServerAction.cpp.o -c /home/zajancz/Desktop/PROJEKT_SK2/sk2-Bomberman/src/server/ServerAction.cpp",
+  "file": "/home/zajancz/Desktop/PROJEKT_SK2/sk2-Bomberman/src/server/ServerAction.cpp"
+},
+{
+  "directory": "/home/zajancz/Desktop/PROJEKT_SK2/sk2-Bomberman/build",
+  "command": "/usr/bin/g++   -I/home/zajancz/Desktop/PROJEKT_SK2/sk2-Bomberman/src/server  -g   -o CMakeFiles/server.dir/src/server/ServerEventHandler.cpp.o -c /home/zajancz/Desktop/PROJEKT_SK2/sk2-Bomberman/src/server/ServerEventHandler.cpp",
+  "file": "/home/zajancz/Desktop/PROJEKT_SK2/sk2-Bomberman/src/server/ServerEventHandler.cpp"
+}
+]

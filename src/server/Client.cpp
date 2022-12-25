@@ -1,4 +1,5 @@
 #include "Client.h"
+#include "MessageHandler.h"
 
 class Client;
 
@@ -47,6 +48,8 @@ void Client::handleEvent(uint32_t events) {
                     sendToAllBut(_fd, readBuffer.data, thismsglen);
 
                     // TODO: MessageHandler //
+                    MessageHandler msgHandler(this, &readBuffer, thismsglen);
+                    msgHandler.handleMessage();
                     
                     // #### Prepare for next message
                     // calculate lenth of remaining data in buffer

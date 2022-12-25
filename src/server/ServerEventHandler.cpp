@@ -5,7 +5,7 @@ ServerEventHandler::ServerEventHandler(int * serverSocketPtr, std::unordered_set
     clients = clientsPtr;
 }
 
-void ServerEventHandler::handleEvent(uint32_t events) {
+void ServerEventHandler::handleEventEpollin(uint32_t events) {
     printf("handling new client\n");
     if(events & EPOLLIN){
         sockaddr_in clientAddr{};
@@ -25,6 +25,14 @@ void ServerEventHandler::handleEvent(uint32_t events) {
         ctrl_c(SIGINT);
     }
 }
+
+void ServerEventHandler::handleEventEpollout(uint32_t events) {
+    
+    if(events & EPOLLOUT){
+        printf("Test of Epollout in severEventHandler\n");
+    }
+}
+
 
 void ServerEventHandler::ctrl_c(int){
     for(Client * client : *clients)

@@ -25,61 +25,67 @@ Client::~Client(){
 }
 int Client::fd() const {return _fd;}
 
-void Client::handleEvent(uint32_t events) {
+void Client::handleEventEpollin(uint32_t events) 
+{
     printf("Handling client's event\n");
-    if(events & EPOLLIN) {
-        ssize_t count = read(_fd, readBuffer.dataPos(), readBuffer.remaining());
-        if(count <= 0)
-            events |= EPOLLERR;
-        else {
-            readBuffer.pos += count;
-            // Find '\n' symbol and return pointer to it's location (nullptr if not found)
-            char * eol = (char*) memchr(readBuffer.data, '\n', readBuffer.pos);
-            if(eol == nullptr) { // readBuffer does not contain `\n` symbol
-                if(0 == readBuffer.remaining())
-                    readBuffer.doube();
-            } else { // readbuffer contains at least one `\n`
-                do {
-                    // #### Read message
-                    // length of data in buffer to closest \n 
-                    auto thismsglen = eol - readBuffer.data + 1;
-                    // save data to output buffer (dataToWrite)
-                    // only the length of this message
-                    sendToAllBut(_fd, readBuffer.data, thismsglen);
+    ssize_t count = read(_fd, readBuffer.dataPos(), readBuffer.remaining());
+    if(count <= 0)
+        events |= EPOLLERR;
+    else {
+        readBuffer.pos += count;
+        // Find '\n' symbol and return pointer to it's location (nullptr if not found)
+        char * eol = (char*) memchr(readBuffer.data, '\n', readBuffer.pos);
+        if(eol == nullptr) { // readBuffer does not contain `\n` symbol
+            if(0 == readBuffer.remaining())
+                readBuffer.doube();
+        } else { // readbuffer contains at least one `\n`
+            do {
+                // #### Read message
+                // length of data in buffer to closest \n 
+                auto thismsglen = eol - readBuffer.data + 1;
+                // save data to output buffer (dataToWrite)
+                // only the length of this messag   
+                sendToAllBut(_fd, readBuffer.data, thismsglen);  
+                // TODO: MessageHandler //
+                MessageHandler msgHandler(this, &readBuffer, thismsglen);
+                msgHandler.handleMessage();
 
-                    // TODO: MessageHandler //
-                    MessageHandler msgHandler(this, &readBuffer, thismsglen);
-                    msgHandler.handleMessage();
-                    
-                    // #### Prepare for next message
-                    // calculate lenth of remaining data in buffer
-                    auto nextmsgslen =  readBuffer.pos - thismsglen;
-                    // update buffer position
-                    memmove(readBuffer.data, eol+1, nextmsgslen);
-                    readBuffer.pos = nextmsgslen;
-                } while((eol = (char*) memchr(readBuffer.data, '\n', readBuffer.pos)));
-            }
+                // #### Prepare for next message
+                // calculate lenth of remaining data in buffer
+                auto nextmsgslen =  readBuffer.pos - thismsglen;
+                // update buffer position
+                memmove(readBuffer.data, eol+1, nextmsgslen);
+                readBuffer.pos = nextmsgslen;
+            } while((eol = (char*) memchr(readBuffer.data, '\n', readBuffer.pos)));
         }
+
     }
-    if(events & EPOLLOUT) {
-        do {
-            int remaining = dataToWrite.front().remaining();
-            int sent = send(_fd, dataToWrite.front().data+dataToWrite.front().pos, remaining, MSG_DONTWAIT);
-            if(sent == remaining) {
-                dataToWrite.pop_front();
-                if(0 == dataToWrite.size()) {
-                    waitForWrite(false);
-                    break;
-                }
-                continue;
-            } else if(sent == -1) {
-                if(errno != EWOULDBLOCK && errno != EAGAIN)
-                    events |= EPOLLERR;
-            } else
-                dataToWrite.front().pos += sent;
-        } while(false);
+
+    if(events & ~EPOLLIN) {
+        remove();
     }
-    if(events & ~(EPOLLIN|EPOLLOUT)) {
+
+}
+void Client::handleEventEpollout(uint32_t events) 
+{
+    do {
+        int remaining = dataToWrite.front().remaining();
+        int sent = send(_fd, dataToWrite.front().data+dataToWrite.front().pos, remaining, MSG_DONTWAIT);
+        if(sent == remaining) {
+            dataToWrite.pop_front();
+            if(0 == dataToWrite.size()) {
+                waitForWrite(false);
+                break;
+            }
+            continue;
+        } else if(sent == -1) {
+            if(errno != EWOULDBLOCK && errno != EAGAIN)
+                events |= EPOLLERR;
+        } else
+            dataToWrite.front().pos += sent;
+    } while(false);
+
+    if(events & ~EPOLLOUT) {
         remove();
     }
 }

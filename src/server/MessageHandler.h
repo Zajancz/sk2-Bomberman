@@ -85,11 +85,25 @@ public:
     }
     
     
-    void handlePlayerPositionType();
-    void handleRequestNewBomb();
-    void handleRequestNewUser();
-    void handleRequestNewLobby();
-    void handleRequestLobbyList();
-    void handleRequestJoin();
-    void handleRequestReady();
+    void handlePlayerPositionType(){
+        printf("handlePlayerPositionType");
+    };
+    void handleRequestNewBomb(){
+        printf("handleRequestNewBomb");
+    };
+    void handleRequestNewUser(){
+        printf("handleRequestNewUser");
+    };
+    void handleRequestNewLobby(){
+        printf("handleRequestNewLobby");
+    };
+    void handleRequestLobbyList(){
+        printf("handleRequestLobbyList");
+    };
+    void handleRequestJoin(){
+        printf("handleRequestJoin");
+    };
+    void handleRequestReady(){
+        printf("handleRequestReady");
+    };
 };

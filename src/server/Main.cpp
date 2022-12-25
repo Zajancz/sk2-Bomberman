@@ -62,12 +62,21 @@ int main(int argc, char ** argv){
             // ! this throws "Segmentation fault (core dumped)" ! // I dont understand why.
             // !((ServerEventHandler*)epollEvent.data.ptr)->handleEvent(epollEvent.events);
             // the following seems to work,
-            serverEventHandler->handleEvent(epollEvent.events);
+            if (epollEvent.events & EPOLLIN)
+                serverEventHandler->handleEventEpollin(epollEvent.events);
+            else if (epollEvent.events & EPOLLOUT) {
+                serverEventHandler->handleEventEpollout(epollEvent.events);
+            }
+
             printf("finished handling new request\n");
         } else {
             printf("========= about to handle request of known client ===========\n");
             // Client->handleEvent()
-            ((EventHandler*)epollEvent.data.ptr)->handleEvent(epollEvent.events);
+            if (epollEvent.events & EPOLLIN)
+                ((EventHandler*)epollEvent.data.ptr)->handleEventEpollin(epollEvent.events);
+            else if (epollEvent.events & EPOLLOUT) {
+                ((EventHandler*)epollEvent.data.ptr)->handleEventEpollout(epollEvent.events);
+            }
         }
     }
 

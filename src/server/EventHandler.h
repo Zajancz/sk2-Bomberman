@@ -3,5 +3,6 @@
 
 struct EventHandler {
     virtual ~EventHandler(){}
-    virtual void handleEvent(uint32_t events) = 0;
+    virtual void handleEventEpollin(uint32_t events) = 0;
+    virtual void handleEventEpollout(uint32_t events) = 0;
 };

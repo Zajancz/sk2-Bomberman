@@ -15,6 +15,7 @@ class ServerEventHandler : public EventHandler {
     std::unordered_set<Client*> * clients;
 public:
     ServerEventHandler(int * serverSocketPtr, std::unordered_set<Client*> * clientsPtr);
-    virtual void handleEvent(uint32_t events) override;
+    virtual void handleEventEpollin(uint32_t events) override;
+    virtual void handleEventEpollout(uint32_t events) override;
     void ctrl_c(int);
 };

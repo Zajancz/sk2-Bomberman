@@ -31,7 +31,8 @@ public:
     virtual ~Client();
 
     int fd() const;
-    virtual void handleEvent(uint32_t events) override;
+    virtual void handleEventEpollin(uint32_t events) override;
+    virtual void handleEventEpollout(uint32_t events) override;
     void write(char * buffer, int count);
     void remove();
     void sendToAllBut(int fd, char * buffer, int count);

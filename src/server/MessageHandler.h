@@ -33,7 +33,9 @@ public:
     }
     virtual ~MessageHandler(){ }
 
-    void handleMessage() // Resolves message type and calls corresponding method
+    // Resolves message type and calls corresponding method
+
+    void handleMessage() 
     {
         if(length < 4)
             printf("Error message. Example: 0001 (text)\n");
@@ -46,9 +48,27 @@ public:
             case 1:
                 handleTextType();
                 break;
-            //case 2:
-                //...
-            //    break;
+            case 2:
+                handlePlayerPositionType();
+                break;
+            case 3:
+                handleRequestNewBomb();
+                break;
+            case 4:
+                handleRequestNewUser();
+                break;
+            case 5:
+                handleRequestNewLobby();
+                break;
+            case 6:
+                handleRequestLobbyList();
+                break;
+            case 7:
+                handleRequestJoin();
+                break;
+            case 8:
+                handleRequestReady();
+                break;    
             default:
                 printf("Wrong Type\n");
                 break;
@@ -56,12 +76,20 @@ public:
         }
     }
     
-    void handleTextType() // Writes a message to console
+    // Writes a message to console
     // In future, it will convert from binary to a structure, then write message to console
+
+    void handleTextType() 
     {
         printf(Text().content1);
     }
     
+    
     void handlePlayerPositionType();
     void handleRequestNewBomb();
+    void handleRequestNewUser();
+    void handleRequestNewLobby();
+    void handleRequestLobbyList();
+    void handleRequestJoin();
+    void handleRequestReady();
 };

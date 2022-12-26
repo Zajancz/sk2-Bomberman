@@ -16,34 +16,6 @@
 #include "../server/Client.h"
 #include "../server/MessageHandler.h"
 
-ssize_t readData(int fd, char * buffer, ssize_t buffsize){
-    auto ret = read(fd, buffer, buffsize);
-    if(ret==-1) error(1,errno, "read failed on descriptor %d", fd);
-    return ret;
-}
-
-void writeData(int fd, char * buffer, ssize_t count){
-    auto ret = write(fd, buffer, count);
-    if(ret==-1) error(1, errno, "write failed on descriptor %d", fd);
-    if(ret!=count) error(0, errno, "wrote less than requested to descriptor %d (%ld/%ld)", fd, count, ret);
-}
-
-void socketReaderFunction(int sock){
-        while(1){
-            // read from socket, write to stdout
-            ssize_t bufsize = 255, received;
-            char buffer[bufsize];
-            received = readData(sock, buffer, bufsize);
-            if(received <= 0){
-                shutdown(sock, SHUT_RDWR);
-                close(sock);
-                exit(0);
-            }
-            writeData(1, buffer, received);
-            
-        }
-}
-
 int main(int argc, char ** argv){
 
     if(argc!=3) error(1,0,"Need 2 args");

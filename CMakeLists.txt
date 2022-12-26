@@ -24,7 +24,10 @@ add_executable(server ${server_SRC})
 file(GLOB client_SRC
      "src/client/*.h"
      "src/client/*.cpp"
+     "src/server/*.cpp"
+     "src/server/*.h"
 )
+list(FILTER client_SRC EXCLUDE REGEX "src/server/Main\.cpp")
 add_executable(client ${client_SRC})
 
 # Add the necessary include directories for the project

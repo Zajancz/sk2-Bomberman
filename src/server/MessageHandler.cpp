@@ -1,11 +1,12 @@
 #include "MessageHandler.h"
+using namespace Server;
 
 void MessageHandler::handleMessage() 
 {
     if(length < 4) {
         printf("Error message. Example: 0001 (text)\n");
 
-        Text text = {"Testing message","second field"};
+        Text text = {"Testing \nmessage",0,"yyy"};
         sendMessage<Text>(text);
 
     } else {
@@ -61,5 +62,5 @@ void MessageHandler::sendMessage(Message message) {
     // testing reading the message from converted
     Text text2;
     memcpy(&text2, &converted[4], sizeof(Text));
-    printf("test reading: %s,%s\n",text2.content1,text2.content2);
+    printf("test reading of sent data: %s,%d,%s\n",text2.content1,text2.content2,text2.content3);
 }

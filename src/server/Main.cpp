@@ -1,6 +1,3 @@
-//      Contents of this file will in future be moved to Network class in a separate file.
-//      Starting point for this file is 05_sockets_concurrency/z2cpp
-
 #include <cstdlib>
 #include <cstdio>
 #include <cstring>
@@ -20,8 +17,7 @@
 #include "EventHandler.h"
 #include "ServerEventHandler.h"
 #include "ServerAction.h"
-
-class Client;
+using namespace Server;
 
 int servFd;
 std::unordered_set<Client*> clients;

@@ -3,7 +3,8 @@
 // This structure represents a message to server/client console
 struct Text {
     char content1[255];
-    char content2[16];
+    int content2;
+    char content3[10];
 };
 
 struct PlayerPosition {};

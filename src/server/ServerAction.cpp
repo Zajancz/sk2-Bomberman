@@ -1,4 +1,5 @@
 #include "ServerAction.h"
+using namespace Server;
 
 std::unordered_set<Client*> * ServerAction::clients;
 int ServerAction::serverSocket;

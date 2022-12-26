@@ -19,53 +19,55 @@
 
 #include <string>
 
-class MessageHandler {
-private:
-    Client * client; // Client from whom the mesasge is
-    Buffer * readBuffer; // Clients buffer
-    int length; // message length
-public:
-    MessageHandler(Client* _client, Buffer* _buffer, int _length)
-    {
-        client = _client;
-        readBuffer = _buffer;
-        length = _length;
-    }
-    virtual ~MessageHandler(){ }
+namespace Server {
+    class MessageHandler {
+    private:
+        Client * client; // Client from whom the mesasge is
+        Buffer * readBuffer; // Clients buffer
+        int length; // message length
+    public:
+        MessageHandler(Client* _client, Buffer* _buffer, int _length)
+        {
+            client = _client;
+            readBuffer = _buffer;
+            length = _length;
+        }
+        virtual ~MessageHandler(){ }
 
-    template<class Message>
-    void sendMessage(Message message);
+        template<class Message>
+        void sendMessage(Message message);
 
-    // Resolves message type and calls corresponding method
-    void handleMessage();
-    
-    // Writes a message to console
-    void handleTextType() 
-    {
-        Text text;
-        memcpy(&text, &readBuffer->data[4], sizeof(Text));
-        printf("received Text: {%s,%s}\n",text.content1,text.content2);
-    }
-    
-    void handlePlayerPositionType(){
-        printf("handlePlayerPositionType");
+        // Resolves message type and calls corresponding method
+        void handleMessage();
+        
+        // Writes a message to console
+        void handleTextType() 
+        {
+            Text text;
+            memcpy(&text, &readBuffer->data[4], sizeof(Text));
+            printf("received Text: {%s,%d,%s}\n",text.content1,text.content2,text.content3);
+        }
+        
+        void handlePlayerPositionType(){
+            printf("handlePlayerPositionType");
+        };
+        void handleRequestNewBomb(){
+            printf("handleRequestNewBomb");
+        };
+        void handleRequestNewUser(){
+            printf("handleRequestNewUser");
+        };
+        void handleRequestNewLobby(){
+            printf("handleRequestNewLobby");
+        };
+        void handleRequestLobbyList(){
+            printf("handleRequestLobbyList");
+        };
+        void handleRequestJoin(){
+            printf("handleRequestJoin");
+        };
+        void handleRequestReady(){
+            printf("handleRequestReady");
+        };
     };
-    void handleRequestNewBomb(){
-        printf("handleRequestNewBomb");
-    };
-    void handleRequestNewUser(){
-        printf("handleRequestNewUser");
-    };
-    void handleRequestNewLobby(){
-        printf("handleRequestNewLobby");
-    };
-    void handleRequestLobbyList(){
-        printf("handleRequestLobbyList");
-    };
-    void handleRequestJoin(){
-        printf("handleRequestJoin");
-    };
-    void handleRequestReady(){
-        printf("handleRequestReady");
-    };
-};
+}

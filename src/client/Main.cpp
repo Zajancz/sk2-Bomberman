@@ -8,7 +8,13 @@
 #include <errno.h>
 #include <error.h>
 #include <netdb.h>
-#include <thread>
+#include <cstdio>
+#include <cstring>
+#include <arpa/inet.h>
+#include <sys/epoll.h>
+#include "../server/Messages/Text.h"
+#include "../server/Client.h"
+#include "../server/MessageHandler.h"
 
 ssize_t readData(int fd, char * buffer, ssize_t buffsize){
     auto ret = read(fd, buffer, buffsize);
@@ -39,6 +45,7 @@ void socketReaderFunction(int sock){
 }
 
 int main(int argc, char ** argv){
+
     if(argc!=3) error(1,0,"Need 2 args");
     
     // Resolve arguments to IPv4 address with a port number
@@ -56,26 +63,28 @@ int main(int argc, char ** argv){
     
     // free memory
     freeaddrinfo(resolved);
-    
-/****************************/
-    
-    std::thread socketReaderThread(socketReaderFunction, sock);
-    
-/****************************/
-    
-    while(1){
-        // read from stdin, write to socket
-        ssize_t bufsize = 255, received;
-        char buffer[bufsize];
-        received = readData(0, buffer, bufsize);
-        if(received <= 0){
-            shutdown(sock, SHUT_RDWR);
-            close(sock);
-            exit(0);
-        }
-        writeData(sock, buffer, received);
-    }
-    
-/****************************/
 
+    int epollFd = epoll_create1(0);
+    Server::Client::epollFd = epollFd;
+    printf("epollFd is set to: %d\n", epollFd);
+    Server::Client * client = new Server::Client(sock);
+    epoll_event epollEvent;
+    epollEvent.events = EPOLLIN;
+
+    Server::MessageHandler msgHandler(client, NULL, 0);
+    Text text = {"Testing client side", 0, "testing"};
+    msgHandler.sendMessage<Text>(text);
+    //client->write()
+
+    while(1) {
+        printf("\tepoll_wait: %d \n",(int)epoll_wait(epollFd, &epollEvent, 1, -1));
+        printf("========= about to handle request of known client ===========\n");
+        // client.handleEventEpollin(epollEvent.events);
+        if (epollEvent.events & EPOLLIN)
+            ((EventHandler*)epollEvent.data.ptr)->handleEventEpollin(epollEvent.events);
+        else if (epollEvent.events & EPOLLOUT) {
+            ((EventHandler*)epollEvent.data.ptr)->handleEventEpollout(epollEvent.events);
+        }
+    }
+    return 0;
 }

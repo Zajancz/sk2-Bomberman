@@ -16,24 +16,26 @@
 #include "EventHandler.h"
 #include "Buffer.h"
 
-class Client : public EventHandler {
-private:
-    int _fd;
-    Buffer readBuffer;
-    std::list<Buffer> dataToWrite;
+namespace Server {
+    class Client : public EventHandler {
+    private:
+        int _fd;
+        Buffer readBuffer;
+        std::list<Buffer> dataToWrite;
 
-    void waitForWrite(bool epollout);
-public:
-    static int epollFd;
-    static std::unordered_set<Client*> clients;
+        void waitForWrite(bool epollout);
+    public:
+        static int epollFd;
+        static std::unordered_set<Client*> clients;
 
-    Client(int fd);
-    virtual ~Client();
+        Client(int fd);
+        virtual ~Client();
 
-    int fd() const;
-    virtual void handleEventEpollin(uint32_t events) override;
-    virtual void handleEventEpollout(uint32_t events) override;
-    void write(char * buffer, int count);
-    void remove();
-    void sendToAllBut(int fd, char * buffer, int count);
-};
+        int fd() const;
+        virtual void handleEventEpollin(uint32_t events) override;
+        virtual void handleEventEpollout(uint32_t events) override;
+        void write(char * buffer, int count);
+        void remove();
+        void sendToAllBut(int fd, char * buffer, int count);
+    };
+}

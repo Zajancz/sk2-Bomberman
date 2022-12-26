@@ -1,4 +1,5 @@
 #include "ServerEventHandler.h"
+using namespace Server;
 
 ServerEventHandler::ServerEventHandler(int * serverSocketPtr, std::unordered_set<Client*> * clientsPtr) {
     serverSocket = serverSocketPtr;

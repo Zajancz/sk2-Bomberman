@@ -1,10 +1,10 @@
 #include "Client.h"
 #include "MessageHandler.h"
 
-class Client;
+using namespace Server;
 
-std::unordered_set<Client*> Client::clients;
-int Client::epollFd;
+std::unordered_set<Server::Client*> Server::Client::clients;
+int Server::Client::epollFd;
 
 void Client::waitForWrite(bool epollout) {
     epoll_event ee {EPOLLIN|EPOLLRDHUP|(epollout?EPOLLOUT:0), {.ptr=this}};

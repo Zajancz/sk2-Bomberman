@@ -33,57 +33,19 @@ public:
     }
     virtual ~MessageHandler(){ }
 
+    template<class Message>
+    void sendMessage(Message message);
+
     // Resolves message type and calls corresponding method
-
-    void handleMessage() 
-    {
-        if(length < 4)
-            printf("Error message. Example: 0001 (text)\n");
-        else
-        {
-            std::string str(readBuffer->data, 0, 4);
-            int typeMessage = std::stoi(str);
-
-            switch (typeMessage) {
-            case 1:
-                handleTextType();
-                break;
-            case 2:
-                handlePlayerPositionType();
-                break;
-            case 3:
-                handleRequestNewBomb();
-                break;
-            case 4:
-                handleRequestNewUser();
-                break;
-            case 5:
-                handleRequestNewLobby();
-                break;
-            case 6:
-                handleRequestLobbyList();
-                break;
-            case 7:
-                handleRequestJoin();
-                break;
-            case 8:
-                handleRequestReady();
-                break;    
-            default:
-                printf("Wrong Type\n");
-                break;
-            }
-        }
-    }
+    void handleMessage();
     
     // Writes a message to console
-    // In future, it will convert from binary to a structure, then write message to console
-
     void handleTextType() 
     {
-        printf(Text().content1);
+        Text text;
+        memcpy(&text, &readBuffer->data[4], sizeof(Text));
+        printf("received Text: {%s,%s}\n",text.content1,text.content2);
     }
-    
     
     void handlePlayerPositionType(){
         printf("handlePlayerPositionType");

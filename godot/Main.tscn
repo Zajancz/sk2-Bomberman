@@ -90,12 +90,6 @@ points = PoolVector2Array( 0, 0, 32, 0, 32, 32, 0, 32 )
 
 [node name="Main" type="Node2D"]
 
-<<<<<<< HEAD
-[node name="TextEdit" type="TextEdit" parent="."]
-margin_right = 40.0
-margin_bottom = 40.0
-text = "hello"
-=======
 [node name="TileMap" type="TileMap" parent="."]
 tile_set = SubResource( 2 )
 cell_size = Vector2( 32, 32 )
@@ -106,4 +100,3 @@ tile_data = PoolIntArray( 0, 1, 0, 1, 1, 0, 2, 1, 0, 3, 1, 0, 4, 1, 0, 5, 1, 0, 
 position = Vector2( 96.6741, 195.736 )
 scale = Vector2( 1.93942, 1.93942 )
 texture = ExtResource( 1 )
->>>>>>> 0b550c211c3625636904689721d9cc1db3221c3f

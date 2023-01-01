@@ -6,6 +6,7 @@ cmake_install.cmake
 Makefile
 *.exe
 build/
+src/gdlibrary.os
 
 # for projects that use SCons for building: http://http://www.scons.org/
 .sconf_temp

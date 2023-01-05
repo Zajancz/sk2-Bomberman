@@ -28,12 +28,12 @@ file(GLOB client_SRC
      "src/server/*.h"
 )
 list(FILTER client_SRC EXCLUDE REGEX "src/server/Main\.cpp")
-add_executable(client ${client_SRC})
+# add_executable(client ${client_SRC})
 
 # Add the necessary include directories for the project
 target_include_directories(server PRIVATE src/server)
-target_include_directories(client PRIVATE src/client)
+# target_include_directories(client PRIVATE src/client)
 
 # Add the necessary libraries for the project
 target_link_libraries(server PRIVATE stdc++ pthread)
-target_link_libraries(client PRIVATE stdc++ pthread)
+# target_link_libraries(client PRIVATE stdc++ pthread)

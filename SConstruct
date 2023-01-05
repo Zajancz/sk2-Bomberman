@@ -99,6 +99,8 @@ env.Append(LIBPATH=[godot_bindings_path + "/bin/"])
 
 sources = []
 add_sources(sources, "src")
+add_sources(sources, "src/client")
+add_sources(sources, "src/server")
 
 library = env.SharedLibrary(target=env["target_path"] + "/" + platform + "/" + env["target_name"], source=sources)
 Default(library)

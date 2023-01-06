@@ -23,5 +23,10 @@ public:
 	godot::String get_data() const;
 
 	void connectToServer(godot::String _ip, godot::String _port);
-	// godot::Vector3[] getPosition();
+	
+	// returns an array of player id's, first element is the current player
+	godot::Array getPlayers();
+	// returns a position of a player with given id
+	godot::Vector2 getPlayerPosition(int id);
+	
 };

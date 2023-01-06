@@ -16,8 +16,12 @@ _global_script_class_icons={
 [application]
 
 config/name="Sk 2- Bomberman"
-run/main_scene="res://main.tscn"
-config/icon="res://icon.png"
+run/main_scene="res://scenes/Main.tscn"
+config/icon="res://assets/player_aqua.png"
+
+[autoload]
+
+Global="*res://scripts/Global.gd"
 
 [gui]
 

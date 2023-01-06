@@ -20,6 +20,7 @@ namespace Client {
     /// @brief Network class establishes connection to the server
     class Network {
     public:
+        static int test;
         static void connectToServer(char* _ip, char* _port);
     };
 }

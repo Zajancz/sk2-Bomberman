@@ -2,7 +2,10 @@
 
 using namespace Client;
 
+int Network::test = 3;
+
 void Network::connectToServer(char * _ip, char * _port) {
+    Network::test = 12;
     // Resolve arguments to IPv4 address with a port number
     addrinfo *resolved, hints={.ai_flags=0, .ai_family=AF_INET, .ai_socktype=SOCK_STREAM};
     int res = getaddrinfo(_ip, _port, &hints, &resolved);

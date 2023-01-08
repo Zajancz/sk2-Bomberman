@@ -20,7 +20,7 @@ void ClientManager::connectToServer(godot::String _ip, godot::String _port) {
 	// const char * c_port = _port.utf8().get_data();
 	char * ip = (char*) _ip.utf8().get_data();
 	char * port = (char*) _port.utf8().get_data();
-	printf("Testowy printf\n");
+	printf("Connecting to server from ClientManager via to Network::connectToServer\n");
 	// malloc(strlen(c_ip) + 10);
 	// char * port = (char*)malloc(strlen(c_port) + 1);
 	// strcpy(ip, c_ip);

@@ -8,12 +8,14 @@
 #include <error.h>
 #include <unordered_set>
 #include "Client.h"
+#include "GameManager.h"
 
 namespace Server {
     /// @brief ServerEventHandler is used for handling all new connections to the server
     class ServerEventHandler : public EventHandler {
         int * serverSocket;
         std::unordered_set<Client*> * clients;
+        static GameManager game; // for now there is only one game per server
     public:
         ServerEventHandler(int * serverSocketPtr, std::unordered_set<Client*> * clientsPtr);
         virtual void handleEventEpollin(uint32_t events) override;

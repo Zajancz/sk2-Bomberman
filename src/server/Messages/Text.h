@@ -7,7 +7,16 @@ struct Text {
     char content3[10];
 };
 
-struct PlayerPosition {};
+struct PlayerPosition {
+    int x;
+    int y;
+};
+
+struct AllPlayersPositions {
+    int ids[32];
+    PlayerPosition position[32];
+};
+
 struct NewBombPlacement {};
 struct NewUser {};
 struct NewLobby {};

@@ -25,9 +25,14 @@ Client::~Client(){
 }
 int Client::fd() const {return _fd;}
 
+// void Client::handleMessage(int length) {
+//     printf("Handling client's message\n");
+//     MessageHandler msgHandler(this, &readBuffer, length);
+//     msgHandler.handleMessage();
+// }
+
 void Client::handleEventEpollin(uint32_t events) 
 {
-    printf("Handling client's event\n");
     ssize_t count = read(_fd, readBuffer.dataPos(), readBuffer.remaining());
     if(count <= 0)
         events |= EPOLLERR;
@@ -47,9 +52,10 @@ void Client::handleEventEpollin(uint32_t events)
                 // only the length of this messag   
                 sendToAllBut(_fd, readBuffer.data, thismsglen);  
                 // TODO: MessageHandler //
+                // handleMessage(thismsglen);
+                printf("Handling client's message\n");
                 MessageHandler msgHandler(this, &readBuffer, thismsglen);
                 msgHandler.handleMessage();
-
                 // #### Prepare for next message
                 // calculate lenth of remaining data in buffer
                 auto nextmsgslen =  readBuffer.pos - thismsglen;

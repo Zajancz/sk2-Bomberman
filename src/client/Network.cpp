@@ -1,7 +1,9 @@
 #include "Network.h"
+// #include "NetworkAgent.h"
 
 using namespace Client;
 
+//Server::Client Network::client;
 int Network::test = 3;
 
 void Network::connectToServer(char * _ip, char * _port) {
@@ -24,15 +26,25 @@ void Network::connectToServer(char * _ip, char * _port) {
 
     int epollFd = epoll_create1(0);
     Server::Client::epollFd = epollFd;
+    // NetworkAgent::epollFd = epollFd;
     printf("epollFd is set to: %d\n", epollFd);
     Server::Client * client = new Server::Client(sock);
+    // Network::client = Server::Client(sock);
+    // Custom client side solution
+    //NetworkAgent::epollFd = epollFd;
+    //NetworkAgent * agent = new NetworkAgent(sock);
+
     epoll_event epollEvent;
     epollEvent.events = EPOLLIN;
 
-    Server::MessageHandler msgHandler(client, NULL, 0);
+    Client::MessageHandler msgHandler(client, NULL, 0);
+    //Client::MessageHandler msgHandler(client, NULL, 0);
     Text text = {"Testing client side", 0, "testing"};
-    msgHandler.sendMessage<Text>(text);
-    //client->write()
+    // msgHandler.sendMessage<Text>(text);
+
+    // PlayerPosition position {88, 12};
+    // msgHandler.sendMessage<Text>(text);
+    // msgHandler.sendMessage<PlayerPosition>(position);
 
     while(1) {
         epoll_wait(epollFd, &epollEvent, 1, -1);

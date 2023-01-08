@@ -1,9 +1,12 @@
 #include "ServerEventHandler.h"
 using namespace Server;
 
+GameManager ServerEventHandler::game;
+
 ServerEventHandler::ServerEventHandler(int * serverSocketPtr, std::unordered_set<Client*> * clientsPtr) {
     serverSocket = serverSocketPtr;
     clients = clientsPtr;
+    ServerEventHandler::game = GameManager();
 }
 
 void ServerEventHandler::handleEventEpollin(uint32_t events) {
@@ -17,7 +20,10 @@ void ServerEventHandler::handleEventEpollin(uint32_t events) {
         
         printf("new connection from: %s:%hu (fd: %d)\n", inet_ntoa(clientAddr.sin_addr), ntohs(clientAddr.sin_port), clientFd);
         
-        new Client(clientFd);
+        Client * client = new Client(clientFd);
+        // assinging all clients to one game
+        client->gameManager = &ServerEventHandler::game;
+        ServerEventHandler::game.addPlayer(clientFd);
         printf("size of clients according to serverhandler: %d\n", (int)clients->size());
         
     }

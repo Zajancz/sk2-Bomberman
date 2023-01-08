@@ -15,6 +15,7 @@
 #include <signal.h>
 #include "EventHandler.h"
 #include "Buffer.h"
+#include "GameManager.h"
 
 namespace Server {
     class Client : public EventHandler {
@@ -24,6 +25,7 @@ namespace Server {
         std::list<Buffer> dataToWrite;
 
         void waitForWrite(bool epollout);
+        // void handleMessage(int length);
     public:
         static int epollFd;
         static std::unordered_set<Client*> clients;
@@ -32,6 +34,8 @@ namespace Server {
         virtual ~Client();
 
         int fd() const;
+        GameManager* gameManager; // The game, the client is playing
+
         virtual void handleEventEpollin(uint32_t events) override;
         virtual void handleEventEpollout(uint32_t events) override;
         void write(char * buffer, int count);

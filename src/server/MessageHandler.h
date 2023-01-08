@@ -15,6 +15,7 @@
 #include <signal.h>
 #include "Buffer.h"
 #include "Client.h"
+#include "GameManager.h"
 #include "Messages/Text.h"
 
 #include <string>
@@ -26,31 +27,25 @@ namespace Server {
         Buffer * readBuffer; // Clients buffer
         int length; // message length
     public:
-        MessageHandler(Client* _client, Buffer* _buffer, int _length)
-        {
-            client = _client;
-            readBuffer = _buffer;
-            length = _length;
-        }
+        MessageHandler();
+        MessageHandler(Client* _client, Buffer* _buffer, int _length);
+        
         virtual ~MessageHandler(){ }
 
         template<class Message>
         void sendMessage(Message message);
 
+        template<class Message>
+        int resolveType();
+
         // Resolves message type and calls corresponding method
         void handleMessage();
         
         // Writes a message to console
-        void handleTextType() 
-        {
-            Text text;
-            memcpy(&text, &readBuffer->data[4], sizeof(Text));
-            printf("received Text: {%s,%d,%s}\n",text.content1,text.content2,text.content3);
-        }
+        void handleTextType();
         
-        void handlePlayerPositionType(){
-            printf("handlePlayerPositionType");
-        };
+        void handlePlayerPositionType();
+
         void handleRequestNewBomb(){
             printf("handleRequestNewBomb");
         };

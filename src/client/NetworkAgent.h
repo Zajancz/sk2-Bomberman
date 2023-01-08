@@ -38,7 +38,6 @@ namespace Client {
         }
 
         void write(char * buffer, int count);
-        void remove();
         void sendToAllBut(int fd, char * buffer, int count);
 
         virtual void handleEventEpollin(uint32_t events) override
@@ -56,8 +55,7 @@ namespace Client {
                 } else { // readbuffer contains at least one `\n`
                     do {
                         auto thismsglen = eol - readBuffer.data + 1;
-                        // ! err: handleMessage(thismsglen);
-
+                        handleMessage(thismsglen);
                         // calculate lenth of remaining data in buffer and updating buffer position
                         auto nextmsgslen =  readBuffer.pos - thismsglen;
                         memmove(readBuffer.data, eol+1, nextmsgslen);
@@ -89,7 +87,7 @@ namespace Client {
             } while(false);
 
             if(events & ~EPOLLOUT) {
-                remove();
+                // TODO: Handle exception, lost connection?
             }
         }
     };

@@ -1,8 +1,8 @@
 #include "NetworkAgent.h"
 #include "../server/EventHandler.h"
 #include "../server/Buffer.h"
+#include "MessageHandler.h"
 // #include "../server/MessageHandler.h"
-// #include "MessageHandler.h"
 
 using namespace Client;
 
@@ -10,8 +10,13 @@ int NetworkAgent::epollFd;
 
 void NetworkAgent::handleMessage(int length) {
     printf("Handling server's message\n");
-    // MessageHandler msgHandler(this, &readBuffer, length);
-    // msgHandler.handleMessage();
+    printf("message of length: %d,\nbuff_pos: %s,\nbuffer: %s.\n", length, readBuffer.dataPos(), readBuffer.data);
+    char * buffer = readBuffer.dataPos();
+    for (int i = 0; i < length; i++) {
+        printf("_%c",buffer[i]);
+    }
+    MessageHandler msgHandler(this, &readBuffer, length);
+    msgHandler.handleMessage();
 }
 
 void NetworkAgent::write(char * buffer, int count) {

@@ -78,6 +78,7 @@ void MessageHandler::handlePlayerPositionType(){
     printf("received PlayerPosition: {%d,%d}\n",position.x,position.y);
     client->gameManager->updatePlayerPosition(client->fd(), position);
     printf("Updated position on the server\n");
-    client->gameManager->getPlayersPositions();
-    printf("Ready to send all positions\n");
+    AllPlayersPositions app = client->gameManager->getPlayersPositions();
+    sendMessage<AllPlayersPositions>(app);
+    printf("Sent all positions\n");
 };

@@ -1,8 +1,11 @@
 #include "MessageHandler.h"
+#include <iostream>
+#include <string>
+#include <stdio.h>
 
 using namespace Client;
 
-MessageHandler::MessageHandler(Server::Client* _client, Buffer* _buffer, int _length) {
+MessageHandler::MessageHandler(NetworkAgent* _client, Buffer* _buffer, int _length) {
     client = _client;
     readBuffer = _buffer;
     length = _length;
@@ -15,11 +18,12 @@ void MessageHandler::handleMessage() {
         sendMessage<Text>(text);
     } else {
         std::string str(readBuffer->data, 0, 4);
+        std::cout<<"MessageType:{"<< str<<"}\n";
         int typeMessage = std::stoi(str);
         switch (typeMessage) {
-        // case 1: handleTextType(); break;
-        // case 2: handlePlayerPositionType(); break;
-        // case 3: handleAllPlayersPositionsType(); break;
+        case 1: handleTextType(); break;
+        case 2: handlePlayerPositionType(); break;
+        case 3: handleAllPlayersPositionsType(); break;
         // TODO ... 
         default:
             printf("Wrong Type\n");
@@ -28,47 +32,20 @@ void MessageHandler::handleMessage() {
     }
 }
 
-// depends on: this:resolveType, this:client:write;
-template<class Message>
-void MessageHandler::sendMessage(Message message) {
-    // converting message to char *: "0000<data>\n" format
-    char converted[sizeof(message) + 5];
-    int type = resolveType<Message>();
-    sprintf(converted, "%4d", type); // assigns a type number to first 4 bytes
-    converted[sizeof(converted) - 1] = '\n';
-    memcpy(&converted[4], &message, sizeof(message));
-    //! err: client->write(converted, sizeof(converted));
-    
-    printf("Sending message of size: sizeof %ld, Encoded: %s.\n", sizeof(converted), converted);
-    printf("Encoded message (with separated characters):\n");
-    for (int i = 0; i < sizeof(converted); i++) {
-        printf("%c-",converted[i]);
-    }
-    printf("\n");
-}
-template<class Message>
-int MessageHandler::resolveType() {
-    if (typeid(Message) == typeid(Text)) return 1;
-    if (typeid(Message) == typeid(PlayerPosition)) return 2;
-    if (typeid(Message) == typeid(AllPlayersPositions)) return 3;
-    // TODO ...
-    return 0;
-}
+void MessageHandler::handleTextType() 
+{
+    Text text;
+    memcpy(&text, &readBuffer->data[4], sizeof(Text));
+    printf("Client::MessageHandler::handleText received Text: {%s,%d,%s}\n",text.content1,text.content2,text.content3);
 
-// void MessageHandler::handleTextType() 
-// {
-//     Text text;
-//     memcpy(&text, &readBuffer->data[4], sizeof(Text));
-//     printf("Client::MessageHandler received Text: {%s,%d,%s}\n",text.content1,text.content2,text.content3);
-
-//     printf("sending a position\n");
-//     PlayerPosition position {44, 55};
-//     sendMessage<PlayerPosition>(position);
-//     printf("sent a position\n");
-// }
-// void MessageHandler::handlePlayerPositionType(){
-//     printf("Client::MessageHandler::handlePlayerPosition()\n");
-// };
-// void MessageHandler::handleAllPlayersPositionsType(){
-//     printf("Client::MessageHandler::handlePlayerPosition()\n");
-// };
+    printf("sending a position\n");
+    PlayerPosition position {44, 55};
+    sendMessage<PlayerPosition>(position);
+    printf("sent a position\n");
+}
+void MessageHandler::handlePlayerPositionType(){
+    printf("Client::MessageHandler::handlePlayerPosition\n");
+};
+void MessageHandler::handleAllPlayersPositionsType(){
+    printf("Client::MessageHandler::handleAllPlayersPositions\n");
+};

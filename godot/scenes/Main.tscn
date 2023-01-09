@@ -1,9 +1,8 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=12 format=2]
 
-[ext_resource path="res://bin/gdexample.gdns" type="Script" id=1]
+[ext_resource path="res://scripts/playerSpawner.gd" type="Script" id=1]
 [ext_resource path="res://scripts/main.gd" type="Script" id=2]
 [ext_resource path="res://assets/ground_tiles.png" type="Texture" id=3]
-[ext_resource path="res://assets/player_aqua.png" type="Texture" id=4]
 [ext_resource path="res://assets/grass2.png" type="Texture" id=5]
 [ext_resource path="res://assets/grass1.png" type="Texture" id=6]
 [ext_resource path="res://assets/wall_white.png" type="Texture" id=7]
@@ -25,6 +24,11 @@ points = PoolVector2Array( 0, 0, 32, 0, 32, 32, 0, 32 )
 0/tile_mode = 0
 0/occluder_offset = Vector2( 0, 0 )
 0/navigation_offset = Vector2( 0, 0 )
+0/shape_offset = Vector2( 0, 0 )
+0/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
+0/shape = SubResource( 1 )
+0/shape_one_way = false
+0/shape_one_way_margin = 1.0
 0/shapes = [ {
 "autotile_coord": Vector2( 0, 0 ),
 "one_way": false,
@@ -41,6 +45,11 @@ points = PoolVector2Array( 0, 0, 32, 0, 32, 32, 0, 32 )
 1/tile_mode = 0
 1/occluder_offset = Vector2( 0, 0 )
 1/navigation_offset = Vector2( 0, 0 )
+1/shape_offset = Vector2( 0, 0 )
+1/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
+1/shape = SubResource( 2 )
+1/shape_one_way = false
+1/shape_one_way_margin = 1.0
 1/shapes = [ {
 "autotile_coord": Vector2( 0, 0 ),
 "one_way": false,
@@ -57,6 +66,10 @@ points = PoolVector2Array( 0, 0, 32, 0, 32, 32, 0, 32 )
 2/tile_mode = 0
 2/occluder_offset = Vector2( 0, 0 )
 2/navigation_offset = Vector2( 0, 0 )
+2/shape_offset = Vector2( 0, 0 )
+2/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
+2/shape_one_way = false
+2/shape_one_way_margin = 0.0
 2/shapes = [  ]
 2/z_index = 0
 3/name = "grass3.png 3"
@@ -67,6 +80,10 @@ points = PoolVector2Array( 0, 0, 32, 0, 32, 32, 0, 32 )
 3/tile_mode = 0
 3/occluder_offset = Vector2( 0, 0 )
 3/navigation_offset = Vector2( 0, 0 )
+3/shape_offset = Vector2( 0, 0 )
+3/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
+3/shape_one_way = false
+3/shape_one_way_margin = 0.0
 3/shapes = [  ]
 3/z_index = 0
 4/name = "grass2.png 4"
@@ -77,6 +94,10 @@ points = PoolVector2Array( 0, 0, 32, 0, 32, 32, 0, 32 )
 4/tile_mode = 0
 4/occluder_offset = Vector2( 0, 0 )
 4/navigation_offset = Vector2( 0, 0 )
+4/shape_offset = Vector2( 0, 0 )
+4/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
+4/shape_one_way = false
+4/shape_one_way_margin = 0.0
 4/shapes = [  ]
 4/z_index = 0
 5/name = "grass1.png 5"
@@ -87,6 +108,10 @@ points = PoolVector2Array( 0, 0, 32, 0, 32, 32, 0, 32 )
 5/tile_mode = 0
 5/occluder_offset = Vector2( 0, 0 )
 5/navigation_offset = Vector2( 0, 0 )
+5/shape_offset = Vector2( 0, 0 )
+5/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
+5/shape_one_way = false
+5/shape_one_way_margin = 0.0
 5/shapes = [  ]
 5/z_index = 0
 
@@ -104,6 +129,7 @@ position = Vector2( 123.532, 203.944 )
 scale = Vector2( 1.93942, 1.93942 )
 texture = ExtResource( 4 )
 script = ExtResource( 1 )
+[node name="EnemySpawner" type="Node2D" parent="."]
 
 [node name="Button" type="Button" parent="."]
 margin_left = 44.0
@@ -111,7 +137,8 @@ margin_top = 390.0
 margin_right = 211.0
 margin_bottom = 432.0
 text = "Test Button"
-__meta__ = {
-"_edit_use_anchors_": false
-}
+
+[node name="Node2D" type="Node2D" parent="."]
+script = ExtResource( 1 )
+
 [connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]

@@ -16,6 +16,7 @@
 #include "EventHandler.h"
 #include "Buffer.h"
 #include "GameManager.h"
+#include "Messages/Text.h"
 
 namespace Server {
     class Client : public EventHandler {
@@ -36,6 +37,7 @@ namespace Server {
         int fd() const;
         GameManager* gameManager; // The game, the client is playing
 
+        int expectedLength(int length);
         virtual void handleEventEpollin(uint32_t events) override;
         virtual void handleEventEpollout(uint32_t events) override;
         void write(char * buffer, int count);

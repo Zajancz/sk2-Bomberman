@@ -31,6 +31,22 @@ int Client::fd() const {return _fd;}
 //     msgHandler.handleMessage();
 // }
 
+// returns length of a full message of recognized type
+// -1 if unrecognized type
+int Client::expectedLength(int length) {
+    int overhead = 5;
+    if (length < 4) return -1;
+    std::string str(readBuffer.data, 0, 4);
+    int typeMessage = std::stoi(str);
+    switch (typeMessage) {
+        case 1: return sizeof(Text) + overhead;
+        case 2: return sizeof(PlayerPosition) + overhead;
+        case 3: return sizeof(AllPlayersPositions) + overhead;
+        // TODO: ...
+        default: return -1;
+    }
+}
+
 void Client::handleEventEpollin(uint32_t events) 
 {
     ssize_t count = read(_fd, readBuffer.dataPos(), readBuffer.remaining());
@@ -45,13 +61,12 @@ void Client::handleEventEpollin(uint32_t events)
                 readBuffer.doube();
         } else { // readbuffer contains at least one `\n`
             do {
-                // #### Read message
-                // length of data in buffer to closest \n 
-                auto thismsglen = eol - readBuffer.data + 1;
-                // save data to output buffer (dataToWrite)
-                // only the length of this messag   
-                sendToAllBut(_fd, readBuffer.data, thismsglen);  
-                // TODO: MessageHandler //
+                // determine if the message is received entirely
+                auto available = &readBuffer.data[readBuffer.pos] - readBuffer.data + 1;
+                int expected = expectedLength(available);
+                printf("%ld/%d\n", available, expected);
+                if (expected == -1 || available < expected) break;
+                auto thismsglen = expected;
                 // handleMessage(thismsglen);
                 printf("Handling client's message\n");
                 MessageHandler msgHandler(this, &readBuffer, thismsglen);

@@ -88,6 +88,7 @@ namespace Client {
             }
             if(events & ~EPOLLIN) {
                 // TODO: Handle: Lost connection to the server
+                printf("Lost connection to the server\n");
             }
         }
         virtual void handleEventEpollout(uint32_t events) override

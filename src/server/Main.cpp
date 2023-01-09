@@ -54,7 +54,7 @@ int main(int argc, char ** argv){
             ctrl_c(SIGINT);
         }
         if (epollEvent.data.u64 == 987654321) {
-            printf("========= about to handle new request ===========\n");
+            printf("== received something from new client ==\n");
             // ! this throws "Segmentation fault (core dumped)" ! // I dont understand why.
             // !((ServerEventHandler*)epollEvent.data.ptr)->handleEvent(epollEvent.events);
             // the following seems to work,
@@ -66,7 +66,7 @@ int main(int argc, char ** argv){
 
             printf("finished handling new request\n");
         } else {
-            printf("========= about to handle request of known client ===========\n");
+            printf("-- received something from known client --\n");
             // Client->handleEvent()
             if (epollEvent.events & EPOLLIN)
                 ((EventHandler*)epollEvent.data.ptr)->handleEventEpollin(epollEvent.events);

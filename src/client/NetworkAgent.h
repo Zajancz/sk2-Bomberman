@@ -16,6 +16,7 @@
 // #include "../server/Client.h"
 #include "../server/EventHandler.h"
 #include "../server/Buffer.h"
+#include "../server/Messages/Text.h"
 
 namespace Client {
     class NetworkAgent : public EventHandler {
@@ -40,6 +41,22 @@ namespace Client {
         void write(char * buffer, int count);
         void sendToAllBut(int fd, char * buffer, int count);
 
+        // returns length of a full message of recognized type
+        // -1 if unrecognized type
+        int expectedLength(int length) {
+            int overhead = 5;
+            if (length < 4) return -1;
+            std::string str(readBuffer.data, 0, 4);
+            int typeMessage = std::stoi(str);
+            switch (typeMessage) {
+                case 1: return sizeof(Text) + overhead;
+                case 2: return sizeof(PlayerPosition) + overhead;
+                case 3: return sizeof(AllPlayersPositions) + overhead;
+                // TODO: ...
+                default: return -1;
+            }
+        }
+
         virtual void handleEventEpollin(uint32_t events) override
         {
             ssize_t count = read(_fd, readBuffer.dataPos(), readBuffer.remaining());
@@ -54,7 +71,13 @@ namespace Client {
                         readBuffer.doube();
                 } else { // readbuffer contains at least one `\n`
                     do {
-                        auto thismsglen = eol - readBuffer.data + 1;
+                        // determine if the message is received entirely
+                        auto available = &readBuffer.data[readBuffer.pos] - readBuffer.data + 1;
+                        int expected = expectedLength(available);
+                        printf("%ld/%d\n", available, expected);
+                        if (expected == -1 || available < expected) break;
+                        // handle message
+                        auto thismsglen = expected;
                         handleMessage(thismsglen);
                         // calculate lenth of remaining data in buffer and updating buffer position
                         auto nextmsgslen =  readBuffer.pos - thismsglen;

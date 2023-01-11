@@ -1,3 +1,5 @@
+#pragma once
+
 #include <cstdlib>
 #include <cstdio>
 #include "../server/Messages/Text.h"
@@ -5,6 +7,8 @@
 #include "../server/MessageHandler.h"
 #include "../server/Buffer.h"
 #include "NetworkAgent.h"
+#include "../game/Player.h"
+#include "../game/Bomb.h"
 
 namespace Client {
     
@@ -67,6 +71,6 @@ namespace Client {
         
         void handlePlayerPositionType();
 
-        void handleAllPlayersPositionsType();
+        void handleEnemiesPositionsType();
     };
 };

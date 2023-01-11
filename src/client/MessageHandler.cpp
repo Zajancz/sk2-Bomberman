@@ -2,6 +2,7 @@
 #include <iostream>
 #include <string>
 #include <stdio.h>
+#include "GameManager.h"
 
 using namespace Client;
 
@@ -23,7 +24,7 @@ void MessageHandler::handleMessage() {
         switch (typeMessage) {
         case 1: handleTextType(); break;
         case 2: handlePlayerPositionType(); break;
-        case 3: handleAllPlayersPositionsType(); break;
+        case 3: handleEnemiesPositionsType(); break;
         // TODO ... 
         default:
             printf("Wrong Type\n");
@@ -32,7 +33,7 @@ void MessageHandler::handleMessage() {
     }
 }
 
-void MessageHandler::handleTextType() 
+void MessageHandler::handleTextType()
 {
     Text text;
     memcpy(&text, &readBuffer->data[4], sizeof(Text));
@@ -46,6 +47,16 @@ void MessageHandler::handleTextType()
 void MessageHandler::handlePlayerPositionType(){
     printf("Client::MessageHandler::handlePlayerPosition\n");
 };
-void MessageHandler::handleAllPlayersPositionsType(){
-    printf("Client::MessageHandler::handleAllPlayersPositions\n");
+void MessageHandler::handleEnemiesPositionsType(){
+    printf("Client::MessageHandler::handleEnemiesPositions\n");
+    AllPlayersPositions enemies;
+    memcpy(&enemies, &readBuffer->data[4], sizeof(AllPlayersPositions));
+    for (int i = 0; i < sizeof(enemies.ids) / sizeof(int); i++) {
+        if (enemies.ids[i] == 0) break;
+        printf("playerId: %d, position: {%d,%d}\n",
+            enemies.ids[i],
+            enemies.position[i].x,
+            enemies.position[i].y);
+        GameManager::addEnemy(enemies.ids[i], enemies.position[i]);
+    }
 };

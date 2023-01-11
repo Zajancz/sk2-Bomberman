@@ -19,6 +19,10 @@ func _exit_tree():
 	threadConnection.wait_to_finish()
 
 func _on_Button_pressed():
-	var players: Array = Global.clientManager.getPlayers()
-	print("players: ",players)
-	print("position: ",Global.clientManager.getPlayerPosition(players[0]))
+#	var players: Array = Global.clientManager.getPlayers()
+#	print("players: ",players)
+#	print("position: ",Global.clientManager.getPlayers(players[0]))
+	Global.clientManager.setPosition(Vector2(87,65))
+	var enemies: Array = Global.clientManager.getEnemies()
+	print("enemies: ", enemies)
+	print("position of first enemy: ", Global.clientManager.getEnemyPosition(enemies[0]))

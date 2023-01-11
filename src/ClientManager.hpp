@@ -4,6 +4,9 @@
 #include <Input.hpp>
 #include <Reference.hpp>
 #include "client/Network.h"
+#include "client/GameManager.h"
+#include "client/NetworkAgent.h"
+#include "client/MessageHandler.h"
 #include <string>
 #include <cstdlib>
 #include <unistd.h>
@@ -24,9 +27,11 @@ public:
 
 	void connectToServer(godot::String _ip, godot::String _port);
 	
-	// returns an array of player id's, first element is the current player
-	godot::Array getPlayers();
+	/// @brief Sets a position of a player, this also refreshes the game state (server responds with new data)
+	void setPosition(godot::Vector2 position);
+	// returns a list of enemies id's
+	godot::Array getEnemies();
 	// returns a position of a player with given id
-	godot::Vector2 getPlayerPosition(int id);
+	godot::Vector2 getEnemyPosition(int id);
 	
 };

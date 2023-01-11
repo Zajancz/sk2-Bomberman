@@ -4,6 +4,8 @@ using namespace Client;
 
 //Server::Client Network::client;
 int Network::test = 3;
+GameState Network::gameState {};
+NetworkAgent* Network::agent;
 
 void Network::connectToServer(char * _ip, char * _port) {
     Network::test = 12;
@@ -23,15 +25,18 @@ void Network::connectToServer(char * _ip, char * _port) {
     int epollFd = epoll_create1(0);
     // Create new NetoworkAgent (equivalent of Server::Client)
     NetworkAgent::epollFd = epollFd;
-    NetworkAgent * agent = new NetworkAgent(sock);
+    Network::agent = new NetworkAgent(sock);
 
-    Client::MessageHandler msgHandler(agent, NULL, 0);
+    Client::MessageHandler msgHandler(Network::agent, NULL, 0);
     //Client::MessageHandler msgHandler(client, NULL, 0);
     Text text = {"Message from Client::Network", 0, "c -> s"};
     msgHandler.sendMessage<Text>(text);
 
     PlayerPosition position {88, 12};
     msgHandler.sendMessage<PlayerPosition>(position);
+
+    PlayerPosition position2 {55, 77};
+    msgHandler.sendMessage<PlayerPosition>(position2);
 
     epoll_event epollEvent;
     epollEvent.events = EPOLLIN;

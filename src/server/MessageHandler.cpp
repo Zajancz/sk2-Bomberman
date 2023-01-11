@@ -72,13 +72,13 @@ void MessageHandler::handleTextType()
     printf("sent a position\n");
 }
 void MessageHandler::handlePlayerPositionType(){
-    printf("handlePlayerPosition, responding with AllPlayersPositons\n");
+    printf("handlePlayerPosition, responding with AllPlayersPositons containing enemies\n");
     PlayerPosition position;
     memcpy(&position, &readBuffer->data[4], sizeof(PlayerPosition));
     printf("received PlayerPosition: {%d,%d}\n",position.x,position.y);
     client->gameManager->updatePlayerPosition(client->fd(), position);
     printf("Updated position on the server\n");
-    AllPlayersPositions app = client->gameManager->getPlayersPositions();
+    AllPlayersPositions app = client->gameManager->getEnemiesPositions(client->fd());
     sendMessage<AllPlayersPositions>(app);
-    printf("Sent all positions\n");
+    printf("Sent positions of enemies for player %d\n", client->fd());
 };

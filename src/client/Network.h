@@ -15,6 +15,7 @@
 #include "../server/Client.h"
 #include "NetworkAgent.h"
 #include "MessageHandler.h"
+#include "GameState.h"
 #include "../server/MessageHandler.h"
 
 namespace Client {
@@ -23,6 +24,8 @@ namespace Client {
     public:
         // static Server::Client client;
         static int test;
+        static GameState gameState;
+        static NetworkAgent* agent;
         static void connectToServer(char* _ip, char* _port);
     };
 }

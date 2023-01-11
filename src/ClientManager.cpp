@@ -3,8 +3,9 @@
 void ClientManager::_register_methods() {
 	godot::register_method("get_data", &ClientManager::get_data);
 	godot::register_method("connectToServer", &ClientManager::connectToServer);
-	godot::register_method("getPlayers", &ClientManager::getPlayers);
-	godot::register_method("getPlayerPosition", &ClientManager::getPlayerPosition);
+	godot::register_method("setPosition", &ClientManager::setPosition);
+	godot::register_method("getEnemies", &ClientManager::getEnemies);
+	godot::register_method("getEnemyPosition", &ClientManager::getEnemyPosition);
 }
 
 void ClientManager::_init() {
@@ -16,29 +17,32 @@ godot::String ClientManager::get_data() const {
 }
 
 void ClientManager::connectToServer(godot::String _ip, godot::String _port) {
-	// const char * c_ip = _ip.utf8().get_data();
-	// const char * c_port = _port.utf8().get_data();
 	char * ip = (char*) _ip.utf8().get_data();
 	char * port = (char*) _port.utf8().get_data();
 	printf("Connecting to server from ClientManager via to Network::connectToServer\n");
-	// malloc(strlen(c_ip) + 10);
-	// char * port = (char*)malloc(strlen(c_port) + 1);
-	// strcpy(ip, c_ip);
-	// strcpy(port, c_port);
-
 	Client::Network::connectToServer(ip, port);
 }
-// For now it's a mock of real functionality
-godot::Array ClientManager::getPlayers() {
-	printf("Returning a mock list of player ids\n");
-	printf(">> %d <<",Client::Network::test);
-	godot::Array players{};
-	players.push_back(10);
-	players.push_back(21);
-	return players;
+/// @brief sends player position to the server
+void ClientManager::setPosition(godot::Vector2 position) {
+	PlayerPosition pp {(int)position.x, (int)position.y};
+	Client::MessageHandler(Client::Network::agent, NULL, 0)
+		.sendMessage<PlayerPosition>(pp);
+}
+
+godot::Array ClientManager::getEnemies() {
+	printf("Returning a list of enemy ids:\n");
+	godot::Array enemies{};
+	for (auto e : Client::GameManager::enemies) {
+		enemies.push_back(e.first); // id (fd) of an enemy's client
+		printf("%d,",e.first);
+	}
+	printf("\n");
+	return enemies;
 }
 // For now it's a mock of real functionality
-godot::Vector2 ClientManager::getPlayerPosition(int id) {
-	godot::Vector2 position = godot::Vector2(100, 10*id);
+godot::Vector2 ClientManager::getEnemyPosition(int id) {
+	printf("Returning position of enemy %d\n", id);
+	PlayerPosition pp = Client::GameManager::enemies[id].position;
+	godot::Vector2 position = godot::Vector2(pp.x, pp.y);
 	return position;
 }

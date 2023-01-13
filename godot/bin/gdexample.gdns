@@ -4,5 +4,4 @@
 
 [resource]
 resource_name = "gdexample"
-class_name = "GDExample"
 library = ExtResource( 1 )

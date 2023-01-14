@@ -49,6 +49,15 @@ func _physics_process(_delta):
 
 func _ready():
 	stunned = false
+	# Setting up timer for updating player position on the server
+	_timer = Timer.new()
+	add_child(_timer)
+	_timer.connect("timeout", self, "_set_position")
+	_timer.set_wait_time(1.0)
+	_timer.set_one_shot(false) # Make sure it loops
+	_timer.start()
 
 
-
+func _set_position():
+	Global.clientManager.setPosition(get_global_position())
+	# print("Updated player position: ",get_global_position())

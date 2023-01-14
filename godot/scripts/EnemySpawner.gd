@@ -1,14 +1,34 @@
 extends Node2D
 
-var id_enemies = []
-var i = 0 
+# Note: Enemy spawner's script does care about enemy's position.
+# It operates soley on enemy ids
 
-var enemy = preload("res://scenes/Enemy.tscn")
-var main = load("res://scenes/Main.tscn")
-	
+var id_enemies = [] # ids of already spawned enemies
+
+var Enemy = preload("res://scenes/Enemy.tscn")
+var _timer = null
+
 func _ready():
-	var Enemy = enemy.instance()
-	add_child(Enemy)
+	# Setting up timer for checking for new players
+	_timer = Timer.new()
+	add_child(_timer)
+	_timer.connect("timeout", self, "_check_player_list")
+	_timer.set_wait_time(1.0)
+	_timer.set_one_shot(false) # Make sure it loops
+	_timer.start()
+
+func _check_player_list():
+	# Determine if there is a new enemy in the game
+	for id in Global.clientManager.getEnemies():
+		if !(id in id_enemies):
+			spawn(id);
+
+# Spawns an Enemy with given 'id'
+func spawn(id:int):
+	var enemy = Enemy.instance()
+	enemy.init(id)
+	add_child(enemy)
+	id_enemies.append(id)
 
 #func spawn(enemies):
 #	var world = main.instance()

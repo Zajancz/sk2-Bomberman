@@ -1,8 +1,12 @@
-extends KinematicBody2D
+extends Node2D
 
 const MOTION_SPEED = 190.0
 
-export var stunned = false
+export var stunned:bool = false
+var enemy_id:int = 0
+
+func init(id):
+	enemy_id = id
 
 func setup_bomb(position):
 	var bomb = preload("res://scenes//bomb.tscn").instance()
@@ -19,35 +23,21 @@ var bomb_index = 0
 
 var _timer = null
 
-func _physics_process(_delta):
-	var motion = Vector2()
-	if Input.is_action_pressed("move_left"):
-		motion += Vector2(-1, 0)
-	if Input.is_action_pressed("move_right"):
-		motion += Vector2(1, 0)
-	if Input.is_action_pressed("move_up"):
-		motion += Vector2(0, -1)
-	if Input.is_action_pressed("move_down"):
-		motion += Vector2(0, 1)
-		
-	var player_position = get_position()
-	var bombing = Input.is_action_pressed("add_bomb")
-
-	if stunned:
-		bombing = false
-		motion = Vector2()
-	
-	if bombing and not prev_bombing:
-		setup_bomb(player_position)
-		
-
-	prev_bombing = bombing
-	
-	move_and_slide(motion * MOTION_SPEED)
-
-
 func _ready():
 	stunned = false
+	# Setting up timer for updating enemy position
+	_timer = Timer.new()
+	add_child(_timer)
+	_timer.connect("timeout", self, "_update_enemy_position")
+	_timer.set_wait_time(1.0)
+	_timer.set_one_shot(false) # Make sure it loops
+	_timer.start()
+
+
+func _update_enemy_position():
+	var pos:Vector2 = Global.clientManager.getEnemyPosition(enemy_id)
+	set_global_position(pos)
+	# print("Updated enemy position: ",pos)
 
 
 

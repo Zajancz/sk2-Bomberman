@@ -44,11 +44,11 @@ void MessageHandler::sendMessage(Message message) {
     client->write(converted, sizeof(converted));
     
     printf("Sending message of size: sizeof %ld, Encoded: %s.\n", sizeof(converted), converted);
-    printf("Encoded message (with separated characters):\n");
-    for (int i = 0; i < sizeof(converted); i++) {
-        printf("%c-",converted[i]);
-    }
-    printf("\n");
+    // printf("Encoded message (with separated characters):\n");
+    // for (int i = 0; i < sizeof(converted); i++) {
+    //     printf("%c-",converted[i]);
+    // }
+    // printf("\n");
 }
 template<class Message>
 int MessageHandler::resolveType() {

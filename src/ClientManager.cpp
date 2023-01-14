@@ -25,12 +25,13 @@ void ClientManager::connectToServer(godot::String _ip, godot::String _port) {
 /// @brief sends player position to the server
 void ClientManager::setPosition(godot::Vector2 position) {
 	PlayerPosition pp {(int)position.x, (int)position.y};
+	printf("Position: {%d, %d}", pp.x, pp.y);
 	Client::MessageHandler(Client::Network::agent, NULL, 0)
 		.sendMessage<PlayerPosition>(pp);
 }
 
 godot::Array ClientManager::getEnemies() {
-	printf("Returning a list of enemy ids:\n");
+	printf("Enemies: ");
 	godot::Array enemies{};
 	for (auto e : Client::GameManager::enemies) {
 		enemies.push_back(e.first); // id (fd) of an enemy's client
@@ -41,8 +42,8 @@ godot::Array ClientManager::getEnemies() {
 }
 // For now it's a mock of real functionality
 godot::Vector2 ClientManager::getEnemyPosition(int id) {
-	printf("Returning position of enemy %d\n", id);
 	PlayerPosition pp = Client::GameManager::enemies[id].position;
+	printf("Enemy %d position is {%d, %d}\n", id, pp.x, pp.y);
 	godot::Vector2 position = godot::Vector2(pp.x, pp.y);
 	return position;
 }

@@ -19,7 +19,7 @@ void MessageHandler::handleMessage() {
         sendMessage<Text>(text);
     } else {
         std::string str(readBuffer->data, 0, 4);
-        std::cout<<"MessageType:{"<< str<<"}\n";
+        // std::cout<<"MessageType:{"<< str<<"}\n";
         int typeMessage = std::stoi(str);
         switch (typeMessage) {
         case 1: handleTextType(); break;
@@ -27,7 +27,7 @@ void MessageHandler::handleMessage() {
         case 3: handleEnemiesPositionsType(); break;
         // TODO ... 
         default:
-            printf("Wrong Type\n");
+            printf("ERROR: Wrong Type\n");
             break;
         }
     }
@@ -39,10 +39,9 @@ void MessageHandler::handleTextType()
     memcpy(&text, &readBuffer->data[4], sizeof(Text));
     printf("Client::MessageHandler::handleText received Text: {%s,%d,%s}\n",text.content1,text.content2,text.content3);
 
-    printf("sending a position\n");
+    printf("Sending a test position as a response\n");
     PlayerPosition position {44, 55};
     sendMessage<PlayerPosition>(position);
-    printf("sent a position\n");
 }
 void MessageHandler::handlePlayerPositionType(){
     printf("Client::MessageHandler::handlePlayerPosition\n");

@@ -29,6 +29,8 @@ public:
 	
 	/// @brief Sets a position of a player, this also refreshes the game state (server responds with new data)
 	void setPosition(godot::Vector2 position);
+	/// @brief Seends a position of a new bomb
+	void setBomb(godot::Vector2 position);
 	// returns a list of enemies id's
 	godot::Array getEnemies();
 	// returns a position of a player with given id

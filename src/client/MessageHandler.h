@@ -40,6 +40,7 @@ namespace Client {
             if (typeid(Message) == typeid(Text)) return 1;
             if (typeid(Message) == typeid(PlayerPosition)) return 2;
             if (typeid(Message) == typeid(AllPlayersPositions)) return 3;
+            if (typeid(Message) == typeid(Bomb)) return 4;
             // TODO ...
             return 0;
         }
@@ -72,5 +73,7 @@ namespace Client {
         void handlePlayerPositionType();
 
         void handleEnemiesPositionsType();
+
+        void handleBombType();
     };
 };

@@ -3,7 +3,7 @@
 
 namespace Game {
     struct Bomb {
-        int fd;
-        PlayerPosition position;
+        int fd; // placer id
+        PlayerPosition position; // bomb's position
     };
 }

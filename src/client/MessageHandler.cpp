@@ -25,6 +25,7 @@ void MessageHandler::handleMessage() {
         case 1: handleTextType(); break;
         case 2: handlePlayerPositionType(); break;
         case 3: handleEnemiesPositionsType(); break;
+        case 4: handleBombType(); break;
         // TODO ... 
         default:
             printf("ERROR: Wrong Type\n");
@@ -59,3 +60,9 @@ void MessageHandler::handleEnemiesPositionsType(){
         GameManager::addEnemy(enemies.ids[i], enemies.position[i]);
     }
 };
+void MessageHandler::handleBombType()
+{
+    Bomb bomb;
+    memcpy(&bomb, &readBuffer->data[4], sizeof(Bomb));
+    printf("Client::MessageHandler::handlebomb received Bomb: {%d,{%d,%d}}\n", bomb.fd, bomb.position.x, bomb.position.y);
+}

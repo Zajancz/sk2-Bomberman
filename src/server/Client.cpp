@@ -42,8 +42,11 @@ int Client::expectedLength(int length) {
         case 1: return sizeof(Text) + overhead;
         case 2: return sizeof(PlayerPosition) + overhead;
         case 3: return sizeof(AllPlayersPositions) + overhead;
+        case 4: return sizeof(Bomb) + overhead;
         // TODO: ...
-        default: return -1;
+        default:
+            printf("Client::expectedLength: Warning - Unknown type, can't read expected size");
+            return -1;
     }
 }
 

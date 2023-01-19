@@ -46,6 +46,8 @@ namespace Server {
         
         void handlePlayerPositionType();
 
+        void handleBombType();
+
         void handleRequestNewBomb(){
             printf("handleRequestNewBomb");
         };

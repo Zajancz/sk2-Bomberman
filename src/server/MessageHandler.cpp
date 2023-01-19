@@ -21,7 +21,7 @@ void MessageHandler::handleMessage()
         case 1: handleTextType(); break;
         case 2: handlePlayerPositionType(); break;
         // case 3: handleAllPlayersPositionsType(); break;
-        // case 3: handleRequestNewBomb(); break;
+        case 4: handleBombType(); break;
         // case 4: handleRequestNewUser(); break;
         // case 5: handleRequestNewLobby(); break;
         // case 6: handleRequestLobbyList(); break;
@@ -54,7 +54,8 @@ template<class Message>
 int MessageHandler::resolveType() {
     if (typeid(Message) == typeid(Text)) return 1;
     if (typeid(Message) == typeid(PlayerPosition)) return 2;
-    if (typeid(Message) == typeid(AllPlayersPositions)) return 3; // ! temporarily 3
+    if (typeid(Message) == typeid(AllPlayersPositions)) return 3;
+    if (typeid(Message) == typeid(Bomb)) return 4;
     // TODO ...
     
     return 0;
@@ -81,4 +82,21 @@ void MessageHandler::handlePlayerPositionType(){
     AllPlayersPositions app = client->gameManager->getEnemiesPositions(client->fd());
     sendMessage<AllPlayersPositions>(app);
     printf("Sent positions of enemies for player %d\n", client->fd());
+    while (true) {
+        Bomb bomb = client->gameManager->getBomb(client->fd());
+        if (bomb.fd == 0) break;
+        sendMessage<Bomb>(bomb);
+        printf("Sent new bomb {%d, {%d, %d}} to client", bomb.fd, bomb.position.x, bomb.position.y);
+    }
+};
+
+void MessageHandler::handleBombType(){
+    printf("handleBomb, adding new bomb to the game\n");
+    Bomb bomb;
+    memcpy(&bomb, &readBuffer->data[4], sizeof(Bomb));
+    // new bomb does not contain fd, inserting it now:
+    bomb.fd = client->fd();
+    printf("received Bomb: {%d {%d,%d}}\n",bomb.fd, bomb.position.x, bomb.position.y);
+    client->gameManager->addBomb(bomb);
+    printf("Added new bomb on the server\n");
 };

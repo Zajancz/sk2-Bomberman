@@ -17,7 +17,11 @@ struct AllPlayersPositions {
     PlayerPosition position[32];
 };
 
-struct NewBombPlacement {};
+struct Bomb {
+    int fd; // placer id
+    PlayerPosition position; // position of the bomb
+};
+
 struct NewUser {};
 struct NewLobby {};
 struct LobbyList {};

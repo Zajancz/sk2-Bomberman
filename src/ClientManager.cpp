@@ -4,6 +4,7 @@ void ClientManager::_register_methods() {
 	godot::register_method("get_data", &ClientManager::get_data);
 	godot::register_method("connectToServer", &ClientManager::connectToServer);
 	godot::register_method("setPosition", &ClientManager::setPosition);
+	godot::register_method("setBomb", &ClientManager::setBomb);
 	godot::register_method("getEnemies", &ClientManager::getEnemies);
 	godot::register_method("getEnemyPosition", &ClientManager::getEnemyPosition);
 }
@@ -28,6 +29,14 @@ void ClientManager::setPosition(godot::Vector2 position) {
 	printf("Position: {%d, %d}", pp.x, pp.y);
 	Client::MessageHandler(Client::Network::agent, NULL, 0)
 		.sendMessage<PlayerPosition>(pp);
+}
+/// @brief sends new bomb's position to the server
+void ClientManager::setBomb(godot::Vector2 position) {
+	PlayerPosition bombPosition {(int)position.x, (int)position.y};
+	Bomb bomb {0, bombPosition};
+	printf("New bomb position: {%d, %d}\n", bombPosition.x, bombPosition.y);
+	Client::MessageHandler(Client::Network::agent, NULL, 0)
+		.sendMessage<Bomb>(bomb);
 }
 
 godot::Array ClientManager::getEnemies() {

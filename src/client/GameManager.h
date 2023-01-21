@@ -1,7 +1,7 @@
 #pragma once
 
 #include <unordered_map>
-#include <unordered_set>
+#include <list>
 #include "../server/Messages/Text.h"
 #include "../game/Player.h"
 #include "../game/Bomb.h"
@@ -12,8 +12,10 @@ namespace Client {
     public:
         // mapping client id onto Player
         static std::unordered_map<int, Game::Player> enemies;
-        static std::unordered_set<Game::Bomb> bombs;
+        static std::list<Game::Bomb> bombs;
 
         static void addEnemy(int fd, PlayerPosition position);
+        static void addBomb(Bomb bomb);
+        static Bomb getBomb(); // return one bomb player doesnt know about
     };
 }

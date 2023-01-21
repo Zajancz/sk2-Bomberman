@@ -7,6 +7,7 @@ void ClientManager::_register_methods() {
 	godot::register_method("setBomb", &ClientManager::setBomb);
 	godot::register_method("getEnemies", &ClientManager::getEnemies);
 	godot::register_method("getEnemyPosition", &ClientManager::getEnemyPosition);
+	godot::register_method("getBombs", &ClientManager::getBombs);
 }
 
 void ClientManager::_init() {
@@ -40,11 +41,10 @@ void ClientManager::setBomb(godot::Vector2 position) {
 }
 
 godot::Array ClientManager::getEnemies() {
-	printf("Enemies: ");
 	godot::Array enemies{};
 	for (auto e : Client::GameManager::enemies) {
 		enemies.push_back(e.first); // id (fd) of an enemy's client
-		printf("%d,",e.first);
+		printf("Enemy: %d,",e.first);
 	}
 	printf("\n");
 	return enemies;
@@ -55,4 +55,16 @@ godot::Vector2 ClientManager::getEnemyPosition(int id) {
 	printf("Enemy %d position is {%d, %d}\n", id, pp.x, pp.y);
 	godot::Vector2 position = godot::Vector2(pp.x, pp.y);
 	return position;
+}
+// For now, only returns a positions, without info about who placed the bomb
+godot::Array ClientManager::getBombs() {
+	godot::Array bombs{};
+	while (true) {
+        Bomb bomb = Client::GameManager::getBomb();
+        if (bomb.fd == 0) break;
+		bombs.push_back(godot::Vector2(bomb.position.x, bomb.position.y));
+        printf("Bomb: {%d, {%d, %d}}, ", bomb.fd, bomb.position.x, bomb.position.y);
+    }
+	printf("\n");
+	return bombs;
 }

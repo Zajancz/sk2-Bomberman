@@ -7,8 +7,8 @@ export var stunned = false
 func setup_bomb(position):
 	var bomb = preload("res://scenes//bomb.tscn").instance()
 
-	bomb.position = position 
-	#+ Vector2(100,100)
+	bomb.position = position
+	Global.clientManager.setBomb(position) # send a new bomb to the server
 
 	get_node("../..").add_child(bomb)
 	bomb.get_node("anim").play("anim")
@@ -53,7 +53,7 @@ func _ready():
 	_timer = Timer.new()
 	add_child(_timer)
 	_timer.connect("timeout", self, "_set_position")
-	_timer.set_wait_time(1.0)
+	_timer.set_wait_time(0.25)
 	_timer.set_one_shot(false) # Make sure it loops
 	_timer.start()
 

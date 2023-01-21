@@ -20,22 +20,29 @@ func _exit_tree():
 	threadConnection.wait_to_finish()
 
 func _on_Button_pressed():
+	## Testing sending and receiving bombs
+	### send player position and update local game state (including receiving bombs)
+	# Global.clientManager.setPosition(Vector2(85,67))
+	### send a new bomb to the server
+	# Global.clientManager.setBomb(Vector2(200, 200))
+	### get a list of new bombs placed by enemies
+	var newBombs: Array = Global.clientManager.getBombs() # returns an array of Vector2 positions
+	print("new bombs:",newBombs)
+
 #	var players: Array = Global.clientManager.getPlayers()
 #	print("players: ",players)
 #	print("position: ",Global.clientManager.getPlayers(players[0]))
 	#var Player = load("res://scripts/player.gd").new()
 	#var PlayerPosition = Player.get_position()
 	
-	
-	var enemies: Array = Global.clientManager.getEnemies()
-	var test = load("res://scripts/EnemySpawner.gd").new()
+	#var enemies: Array = Global.clientManager.getEnemies()
+	#var test = load("res://scripts/EnemySpawner.gd").new()
 	#test.spawn(enemies)
 	
-	Global.clientManager.setPosition(Vector2(85,67))
-	var EnemyPosition = Global.clientManager.getEnemyPosition(enemies[0])
+	#Global.clientManager.setPosition(Vector2(85,67))
+	#var EnemyPosition = Global.clientManager.getEnemyPosition(enemies[0])
 	#var EnemySpawner = load("res://scripts/EnemySpawner.gd").new()
 	#EnemySpawner.spawn(EnemyPosition)
 	
-	print("enemies: ", enemies)
-	print("position of first enemy: ", Global.clientManager.getEnemyPosition(enemies[0]))
-	
+	#print("enemies: ", enemies)
+	#print("position of first enemy: ", Global.clientManager.getEnemyPosition(enemies[0]))

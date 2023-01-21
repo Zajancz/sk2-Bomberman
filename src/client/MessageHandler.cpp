@@ -65,4 +65,5 @@ void MessageHandler::handleBombType()
     Bomb bomb;
     memcpy(&bomb, &readBuffer->data[4], sizeof(Bomb));
     printf("Client::MessageHandler::handlebomb received Bomb: {%d,{%d,%d}}\n", bomb.fd, bomb.position.x, bomb.position.y);
+    GameManager::addBomb(bomb);
 }

@@ -35,5 +35,7 @@ public:
 	godot::Array getEnemies();
 	// returns a position of a player with given id
 	godot::Vector2 getEnemyPosition(int id);
+	// returns an array of Vector2 with bomb positions, each bomb can only be read once
+	godot::Array getBombs();
 	
 };

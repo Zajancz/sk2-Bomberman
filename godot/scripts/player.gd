@@ -8,8 +8,9 @@ func setup_bomb(position):
 	var bomb = preload("res://scenes//bomb.tscn").instance()
 
 	bomb.position = position
+	
 	Global.clientManager.setBomb(position) # send a new bomb to the server
-
+	print("Bomb is planted at %d", position)
 	get_node("../..").add_child(bomb)
 	bomb.get_node("anim").play("anim")
 
@@ -31,7 +32,7 @@ func _physics_process(_delta):
 		motion += Vector2(0, 1)
 		
 	var player_position = get_position()
-	
+
 	var bombing = Input.is_action_pressed("add_bomb")
 
 	if stunned:

@@ -11,9 +11,9 @@ func init(id):
 func setup_bomb(position):
 	var bomb = preload("res://scenes//bomb.tscn").instance()
 
-	bomb.position = position 
+	#bomb.position = position 
 	#+ Vector2(100,100)
-
+	#Global.clientManager.setBomb(position)
 	get_node("../..").add_child(bomb)
 	bomb.get_node("anim").play("anim")
 

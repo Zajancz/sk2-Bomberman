@@ -9,7 +9,7 @@ func setup_bomb(position):
 
 	bomb.position = position
 	
-	Global.clientManager.setBomb(position) # send a new bomb to the server
+	Global.clientManager.setBomb(get_global_position()) # send a new bomb to the server
 	print("Bomb is planted at %d", position)
 	get_node("../..").add_child(bomb)
 	bomb.get_node("anim").play("anim")

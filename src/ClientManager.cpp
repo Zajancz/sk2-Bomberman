@@ -1,5 +1,9 @@
 #include "ClientManager.hpp"
 
+/**
+ * @brief This function mainly used for Godot engine needs to be able to see such functions in Godot
+*/
+
 void ClientManager::_register_methods() {
 	godot::register_method("get_data", &ClientManager::get_data);
 	godot::register_method("connectToServer", &ClientManager::connectToServer);
@@ -18,20 +22,29 @@ godot::String ClientManager::get_data() const {
 	return data;
 }
 
+/**
+ * @brief connects to the server through Godot engine
+*/
+
 void ClientManager::connectToServer(godot::String _ip, godot::String _port) {
 	char * ip = (char*) _ip.utf8().get_data();
 	char * port = (char*) _port.utf8().get_data();
 	printf("Connecting to server from ClientManager via to Network::connectToServer\n");
 	Client::Network::connectToServer(ip, port);
 }
-/// @brief sends player position to the server
+/**
+ * @brief sends player position to the server
+ * */
 void ClientManager::setPosition(godot::Vector2 position) {
 	PlayerPosition pp {(int)position.x, (int)position.y};
 	printf("Position: {%d, %d}", pp.x, pp.y);
 	Client::MessageHandler(Client::Network::agent, NULL, 0)
 		.sendMessage<PlayerPosition>(pp);
 }
-/// @brief sends new bomb's position to the server
+
+/**
+ * @brief sends new bomb's position to the server 
+*/
 void ClientManager::setBomb(godot::Vector2 position) {
 	PlayerPosition bombPosition {(int)position.x, (int)position.y};
 	Bomb bomb {0, bombPosition};
@@ -39,7 +52,9 @@ void ClientManager::setBomb(godot::Vector2 position) {
 	Client::MessageHandler(Client::Network::agent, NULL, 0)
 		.sendMessage<Bomb>(bomb);
 }
-
+/**
+ * @brief gets enemies on the map
+*/
 godot::Array ClientManager::getEnemies() {
 	godot::Array enemies{};
 	for (auto e : Client::GameManager::enemies) {

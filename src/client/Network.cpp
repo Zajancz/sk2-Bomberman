@@ -7,6 +7,16 @@ int Network::test = 3;
 GameState Network::gameState {};
 NetworkAgent* Network::agent;
 
+/**
+ * @brief This function is used to connect to a server 
+ * 
+ * Uses standart algorithm for connection on sockets (TCP)
+ * and also sets up epoll
+ * 
+ * @param _ip - ip of our server
+ * @param _port - port number of our server
+*/
+
 void Network::connectToServer(char * _ip, char * _port) {
     Network::test = 12;
     // Resolve arguments to IPv4 address with a port number

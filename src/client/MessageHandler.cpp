@@ -12,6 +12,14 @@ MessageHandler::MessageHandler(NetworkAgent* _client, Buffer* _buffer, int _leng
     length = _length;
 }
 
+/**
+ * @brief This function is used to identify a message type and call a specific function 
+ * 
+ * For example, if in the buffer will be 0001, then we know the client sends to the server
+ * a text message, nothing more.
+ * 
+*/
+
 void MessageHandler::handleMessage() {
     if(length < 4) {
         printf("Error message. Example: 0001 (text)\n");
@@ -34,6 +42,13 @@ void MessageHandler::handleMessage() {
     }
 }
 
+/**
+ * @brief This function called, when we read 0001 from the buffer
+ * 
+ * Such function used to get current position of a player
+ * 
+*/
+
 void MessageHandler::handleTextType()
 {
     Text text;
@@ -44,9 +59,15 @@ void MessageHandler::handleTextType()
     PlayerPosition position {44, 55};
     sendMessage<PlayerPosition>(position);
 }
+
 void MessageHandler::handlePlayerPositionType(){
     printf("Client::MessageHandler::handlePlayerPosition\n");
 };
+
+/**
+ * @brief This function is used to get enemies position and send this information to Godot engine
+*/
+
 void MessageHandler::handleEnemiesPositionsType(){
     printf("Client::MessageHandler::handleEnemiesPositions\n");
     AllPlayersPositions enemies;
@@ -60,6 +81,11 @@ void MessageHandler::handleEnemiesPositionsType(){
         GameManager::addEnemy(enemies.ids[i], enemies.position[i]);
     }
 };
+
+/**
+ * @brief This function have data about bomb position, file descriptor, and send this information to Godot engine
+*/
+
 void MessageHandler::handleBombType()
 {
     Bomb bomb;

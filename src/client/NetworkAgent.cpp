@@ -8,6 +8,14 @@ using namespace Client;
 
 int NetworkAgent::epollFd;
 
+
+/**
+ * @brief  This function is used to read a message from the server of specific length
+ * 
+ * @param length - amount of bytes we want to read from the server
+ * 
+*/
+
 void NetworkAgent::handleMessage(int length) {
     printf("Handling server's message\n");
     printf("message of length: %d,\nbuffer: %s.\n", length, readBuffer.data);
@@ -18,6 +26,14 @@ void NetworkAgent::handleMessage(int length) {
     MessageHandler msgHandler(this, &readBuffer, length);
     msgHandler.handleMessage();
 }
+
+
+/**
+ * @brief writes a n-size message to the buffer on specific descriptor
+ * 
+ * @param buffer - pointer to our buffer
+ * @param count - amount of bytes we want to send 
+*/
 
 void NetworkAgent::write(char * buffer, int count) {
     if(dataToWrite.size() != 0) {
@@ -38,6 +54,7 @@ void NetworkAgent::write(char * buffer, int count) {
     }
     waitForWrite(true);
 };
+
 
 void NetworkAgent::waitForWrite(bool epollout) {
     epoll_event ee {EPOLLIN|EPOLLRDHUP|(epollout?EPOLLOUT:0), {.ptr=this}};

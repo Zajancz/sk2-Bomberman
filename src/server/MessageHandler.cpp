@@ -8,6 +8,14 @@ MessageHandler::MessageHandler(Client* _client, Buffer* _buffer, int _length) {
     length = _length;
 }
 
+/**
+ * @brief This function is used to identify a message type and call a specific function 
+ * 
+ * For example, if in the buffer will be 0001, then we know the client sends to the server
+ * a text message, nothing more.
+ * 
+*/
+
 void MessageHandler::handleMessage() 
 {
     if(length < 4) {
@@ -33,6 +41,14 @@ void MessageHandler::handleMessage()
         }
     }
 }
+
+/**
+ * @brief This function is used to send a message between server and clients
+ * 
+ * @param message we provide here a message from the buffer
+ * 
+*/
+
 template<class Message>
 void MessageHandler::sendMessage(Message message) {
     // converting message to char *: "0000<data>\n" format
@@ -50,6 +66,15 @@ void MessageHandler::sendMessage(Message message) {
     // }
     // printf("\n");
 }
+
+/**
+ * @brief This function is used to resolve type of a message
+ * 
+ * This function mainly used by sendMessage function
+ * 
+ * @return returns basic 1/2/3/4 based of type read from the buffer
+*/
+
 template<class Message>
 int MessageHandler::resolveType() {
     if (typeid(Message) == typeid(Text)) return 1;
@@ -60,6 +85,13 @@ int MessageHandler::resolveType() {
     
     return 0;
 }
+
+/**
+ * @brief This function called, when we read 0001 from the buffer
+ * 
+ * Such function used to get current position of a player
+ * 
+*/
 
 void MessageHandler::handleTextType() 
 {
@@ -72,6 +104,14 @@ void MessageHandler::handleTextType()
     sendMessage<PlayerPosition>(position);
     printf("sent a position\n");
 }
+
+/**
+ * @brief This function called, when we read 0002 from the buffer
+ * 
+ * Such function used to update current position of a player or ememies
+ * 
+*/
+
 void MessageHandler::handlePlayerPositionType(){
     printf("handlePlayerPosition, responding with AllPlayersPositons containing enemies\n");
     PlayerPosition position;
@@ -89,6 +129,13 @@ void MessageHandler::handlePlayerPositionType(){
         printf("Sent new bomb {%d, {%d, %d}} to client", bomb.fd, bomb.position.x, bomb.position.y);
     }
 };
+
+/**
+ * @brief This function called, when we read 0003 from the buffer
+ * 
+ * Such function used to place bomb on the map by current player in a specific location
+ * 
+*/
 
 void MessageHandler::handleBombType(){
     printf("handleBomb, adding new bomb to the game\n");

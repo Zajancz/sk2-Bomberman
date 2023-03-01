@@ -25,14 +25,17 @@ Client::~Client(){
 }
 int Client::fd() const {return _fd;}
 
-// void Client::handleMessage(int length) {
-//     printf("Handling client's message\n");
-//     MessageHandler msgHandler(this, &readBuffer, length);
-//     msgHandler.handleMessage();
-// }
 
-// returns length of a full message of recognized type
-// -1 if unrecognized type
+
+/**
+ * @brief This function is used to identify length of a message
+ * 
+ * @param length our message, which must be more than 4, because first 4 bytes of the buffer is used for
+ * recognizing a message type
+ * 
+ * @return returns length of a full message of recognized type or -1 if unrecognized type
+*/
+
 int Client::expectedLength(int length) {
     int overhead = 5;
     if (length < 4) return -1;
@@ -49,6 +52,18 @@ int Client::expectedLength(int length) {
             return -1;
     }
 }
+
+/**
+ * @brief This function reads a message from the buffer
+ * 
+ * As we can see if some input event happened on EPOLLIN, then we read bytes from 
+ * our buffer and checks for loss in transition. Also in this process we continiously update 
+ * our current location in the buffer and send a message to be processed by another function
+ * 
+ * @param events - stores events, on which epoll was waiting
+ * 
+*/
+
 
 void Client::handleEventEpollin(uint32_t events) 
 {
@@ -90,6 +105,13 @@ void Client::handleEventEpollin(uint32_t events)
     }
 
 }
+
+/**
+ * @brief This function tests EPOLLOUT from the client side
+ * 
+ * @param events - stores events, on which epoll was waiting
+*/
+
 void Client::handleEventEpollout(uint32_t events) 
 {
     do {
@@ -113,6 +135,14 @@ void Client::handleEventEpollout(uint32_t events)
         remove();
     }
 }
+
+/**
+ * @brief writes a n-size message to the buffer on specific descriptor
+ * 
+ * @param buffer - pointer to our buffer
+ * @param count - amount of bytes we want to send 
+*/
+
 void Client::write(char * buffer, int count) {
     if(dataToWrite.size() != 0) {
         dataToWrite.emplace_back(buffer, count);
@@ -132,13 +162,29 @@ void Client::write(char * buffer, int count) {
     }
     waitForWrite(true);
 }
+
+/**
+ * @brief removes current client from the session
+*/
+
 void Client::remove() {
     printf("removing %d\n", _fd);
     clients.erase(this);
     delete this;
 }
-// This method is here only temporarily, it makes little sense here
-// And we actually do not need it
+
+/**
+ * This method is here only temporarily, it makes little sense here
+ * And we actually do not need it
+ * */ 
+
+/** void Client::handleMessage(int length) {
+  *   printf("Handling client's message\n");
+  *    MessageHandler msgHandler(this, &readBuffer, length);
+  *   msgHandler.handleMessage();
+  *}
+  */
+
 void Client::sendToAllBut(int fd, char * buffer, int count){
     auto it = clients.begin();
     while(it!=clients.end()){

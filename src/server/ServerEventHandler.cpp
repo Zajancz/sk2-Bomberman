@@ -3,11 +3,30 @@ using namespace Server;
 
 GameManager ServerEventHandler::game;
 
+/**
+ * @brief This function sets default parameters like sockets and game 
+ * 
+ * @param serverSocketPtr - sets a server socket
+ * @param clientsPtr - sets a set of clients sockets 
+ * 
+*/
+
 ServerEventHandler::ServerEventHandler(int * serverSocketPtr, std::unordered_set<Client*> * clientsPtr) {
     serverSocket = serverSocketPtr;
     clients = clientsPtr;
     ServerEventHandler::game = GameManager();
 }
+
+/**
+ * @brief This function accept and add new clients
+ * 
+ * As we can see if some input event happened on EPOLLIN, then we accept a new connection to
+ * the server, store a file descriptor of the new client and we add this client to a game. For
+ * now we can only have 1 game.
+ * 
+ * @param events - stores events, on which epoll was waiting
+ * 
+*/
 
 void ServerEventHandler::handleEventEpollin(uint32_t events) {
     printf("handling new client\n");
@@ -33,6 +52,12 @@ void ServerEventHandler::handleEventEpollin(uint32_t events) {
     }
 }
 
+/**
+ * @brief This function tests EPOLLOUT from the server side
+ * 
+ * @param events - stores events, on which epoll was waiting
+*/
+
 void ServerEventHandler::handleEventEpollout(uint32_t events) {
     
     if(events & EPOLLOUT){
@@ -40,6 +65,12 @@ void ServerEventHandler::handleEventEpollout(uint32_t events) {
     }
 }
 
+/**
+ * @brief This function closes server 
+ * 
+ * Closes the server when ctrl+c is provided
+ * 
+*/
 
 void ServerEventHandler::ctrl_c(int){
     for(Client * client : *clients)

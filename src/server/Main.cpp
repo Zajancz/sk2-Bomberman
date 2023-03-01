@@ -26,11 +26,20 @@ void ctrl_c(int);
 
 uint16_t readPort(char * txt);
 
+/**
+ * @brief This function starts the server and listens on Epoll events
+ * 
+ * @param argv reads the port number on which the server will be started
+ * 
+*/
+
+
 int main(int argc, char ** argv){
     if(argc != 2) error(1, 0, "Need 1 arg (port)");
     auto port = readPort(argv[1]);
     
-    servFd = ServerAction::start(port, &clients); // that's probably the wrong clients
+    servFd = ServerAction::start(port, &clients); 
+
     // Create an epoll file descriptor
     int epollFd = ServerAction::epollFd;
 
@@ -55,9 +64,6 @@ int main(int argc, char ** argv){
         }
         if (epollEvent.data.u64 == 987654321) {
             printf("== received something from new client ==\n");
-            // ! this throws "Segmentation fault (core dumped)" ! // I dont understand why.
-            // !((ServerEventHandler*)epollEvent.data.ptr)->handleEvent(epollEvent.events);
-            // the following seems to work,
             if (epollEvent.events & EPOLLIN)
                 serverEventHandler->handleEventEpollin(epollEvent.events);
             else if (epollEvent.events & EPOLLOUT) {
@@ -67,7 +73,6 @@ int main(int argc, char ** argv){
             printf("finished handling new request\n");
         } else {
             printf("-- received something from known client --\n");
-            // Client->handleEvent()
             if (epollEvent.events & EPOLLIN)
                 ((EventHandler*)epollEvent.data.ptr)->handleEventEpollin(epollEvent.events);
             else if (epollEvent.events & EPOLLOUT) {
@@ -78,6 +83,12 @@ int main(int argc, char ** argv){
 
 }
 
+/**
+ * @brief This function reads a port number from standart input
+ * 
+ * @param txt stores the port number
+*/
+
 uint16_t readPort(char * txt){
     char * ptr;
     auto port = strtol(txt, &ptr, 10);
@@ -85,6 +96,12 @@ uint16_t readPort(char * txt){
     return port;
 }
 
+/**
+ * @brief This function closes server 
+ * 
+ * Closes the server when ctrl+c is provided
+ * 
+*/
 
 void ctrl_c(int){
     for(Client * client : clients)

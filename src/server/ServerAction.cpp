@@ -5,10 +5,15 @@ std::unordered_set<Client*> * ServerAction::clients;
 int ServerAction::serverSocket;
 int ServerAction::epollFd;
 
-/// @brief Starts up a server
-/// @param port - port number
-/// @param clients - pointer to client set
-/// @return server socket
+/**
+ * @brief Starts up a server
+ * 
+ * @param port - port number
+ * @param clients - pointer to client set
+ * 
+ * @return server socket
+*/
+
 int ServerAction::start(int port, std::unordered_set<Client*> * clientsPtr) {
     printf("starting the server\n");
     int servFd = socket(AF_INET, SOCK_STREAM, 0);
@@ -35,6 +40,13 @@ int ServerAction::start(int port, std::unordered_set<Client*> * clientsPtr) {
     return servFd;
 }
 
+/**
+ * @brief This function closes server 
+ * 
+ * Closes the server when ctrl+c is provided
+ * 
+*/
+
 void ServerAction::ctrl_c(int){
     for(Client * client : *clients)
         delete client;
@@ -42,6 +54,14 @@ void ServerAction::ctrl_c(int){
     printf("Closing server\n");
     exit(0);
 }
+
+/**
+ * @brief This function sets the socket parameters
+ * 
+ * We set options at the socket level, where we specify the  rules used in validating adresses supplied to bind()
+ * should allow reuse of local addresses
+ *  
+*/
 
 void ServerAction::setReuseAddr(){
     const int one = 1;

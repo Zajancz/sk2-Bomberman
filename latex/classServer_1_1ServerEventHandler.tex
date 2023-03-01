@@ -1,0 +1,43 @@
+\hypertarget{classServer_1_1ServerEventHandler}{}\doxysection{Server\+::Server\+Event\+Handler Class Reference}
+\label{classServer_1_1ServerEventHandler}\index{Server::ServerEventHandler@{Server::ServerEventHandler}}
+
+
+\mbox{\hyperlink{classServer_1_1ServerEventHandler}{Server\+Event\+Handler}} is used for handling all new connections to the server.  
+
+
+
+
+{\ttfamily \#include $<$Server\+Event\+Handler.\+h$>$}
+
+
+
+Inheritance diagram for Server\+::Server\+Event\+Handler\+:
+% FIG 0
+
+
+Collaboration diagram for Server\+::Server\+Event\+Handler\+:
+% FIG 1
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classServer_1_1ServerEventHandler_a2bd590daadfa5aa7a90b010d0625e6d0}\label{classServer_1_1ServerEventHandler_a2bd590daadfa5aa7a90b010d0625e6d0}} 
+{\bfseries Server\+Event\+Handler} (int $\ast$server\+Socket\+Ptr, std\+::unordered\+\_\+set$<$ \mbox{\hyperlink{classServer_1_1Client}{Client}} $\ast$ $>$ $\ast$clients\+Ptr)
+\item 
+\mbox{\Hypertarget{classServer_1_1ServerEventHandler_ab542e3eae59c1c4cd11629444cded470}\label{classServer_1_1ServerEventHandler_ab542e3eae59c1c4cd11629444cded470}} 
+virtual void {\bfseries handle\+Event\+Epollin} (uint32\+\_\+t events) override
+\item 
+\mbox{\Hypertarget{classServer_1_1ServerEventHandler_aecce946035d57486008badb0a08f9594}\label{classServer_1_1ServerEventHandler_aecce946035d57486008badb0a08f9594}} 
+virtual void {\bfseries handle\+Event\+Epollout} (uint32\+\_\+t events) override
+\item 
+\mbox{\Hypertarget{classServer_1_1ServerEventHandler_a9dcbcd229963a3148dd0e0391c1b5f72}\label{classServer_1_1ServerEventHandler_a9dcbcd229963a3148dd0e0391c1b5f72}} 
+void {\bfseries ctrl\+\_\+c} (int)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\mbox{\hyperlink{classServer_1_1ServerEventHandler}{Server\+Event\+Handler}} is used for handling all new connections to the server. 
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+src/server/Server\+Event\+Handler.\+h\item 
+src/server/Server\+Event\+Handler.\+cpp\end{DoxyCompactItemize}

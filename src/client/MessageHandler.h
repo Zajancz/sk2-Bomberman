@@ -13,7 +13,7 @@
 namespace Client {
     
     /* 
-    In future, as a refacotr, we can make an abstract class,
+    In future, as a refactor, we can make an abstract class,
     that would work as an interface, for this class, and it's
     server side equivalent.
     This would allow us to move certain methods (prob. as templates),
@@ -21,9 +21,9 @@ namespace Client {
     */
     // This is a Client - side message handler, base functionality is inherited from the server
     class MessageHandler {//: Server::MessageHandler {
-        NetworkAgent * client; // Client from whom the mesasge is
+        NetworkAgent * client; // Client from whom the message is
         Buffer * readBuffer; // Clients buffer
-        int length; // message length
+        int length; // Message length
     public:
         MessageHandler(NetworkAgent* _client, Buffer* _buffer, int _length);
     //     ~MessageHandler();
@@ -33,7 +33,7 @@ namespace Client {
 
         //? Template methods need to be defined in header files
         //? https://stackoverflow.com/questions/20461146/undefined-reference-when-using-templates
-        //? to check for undefined refernces use the command: $ ld godot/bin/linux/libsimple.so
+        //? to check for undefined references use the command: $ ld godot/bin/linux/libsimple.so
         // Resolves a structure type, returns its identifier as int
         template<class Message>
         int resolveType() {

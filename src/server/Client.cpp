@@ -173,17 +173,6 @@ void Client::remove() {
     delete this;
 }
 
-/**
- * This method is here only temporarily, it makes little sense here
- * And we actually do not need it
- * */ 
-
-/** void Client::handleMessage(int length) {
-  *   printf("Handling client's message\n");
-  *    MessageHandler msgHandler(this, &readBuffer, length);
-  *   msgHandler.handleMessage();
-  *}
-  */
 
 void Client::sendToAllBut(int fd, char * buffer, int count){
     auto it = clients.begin();

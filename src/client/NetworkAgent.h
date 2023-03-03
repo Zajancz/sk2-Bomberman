@@ -13,7 +13,6 @@
 #include <unordered_set>
 #include <list>
 #include <signal.h>
-// #include "../server/Client.h"
 #include "../server/EventHandler.h"
 #include "../server/Buffer.h"
 #include "../server/Messages/Text.h"

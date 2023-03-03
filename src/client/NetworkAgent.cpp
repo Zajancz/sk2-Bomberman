@@ -2,7 +2,6 @@
 #include "../server/EventHandler.h"
 #include "../server/Buffer.h"
 #include "MessageHandler.h"
-// #include "../server/MessageHandler.h"
 
 using namespace Client;
 
@@ -20,9 +19,6 @@ void NetworkAgent::handleMessage(int length) {
     printf("Handling server's message\n");
     printf("message of length: %d,\nbuffer: %s.\n", length, readBuffer.data);
     char * buffer = readBuffer.dataPos();
-    // for (int i = 0; i < length; i++) {
-    //     printf("_%c",buffer[i]);
-    // }
     MessageHandler msgHandler(this, &readBuffer, length);
     msgHandler.handleMessage();
 }
